@@ -1,20 +1,15 @@
-import {Database} from "./Database";
-import {User} from "../../../common/help-on-spot-models/src";
+import {  handler, LambdaInputEvent } from './index'
 
 (async function () {
-
-  const db = new Database();
-  const connection = await db.connect();
-
-  let user = new User();
-  user.firstName = "Geodude";
-  user.lastName = "Pokemon";
-  user.isGPSLocationAllowed = true;
-  user.avatar = "picture.jpg";
-
-  return connection.manager
-    .save(user)
-    .then(user => {
-      console.log("User has been saved. User id is", user.id);
-    });
-})();
+  const user = {
+    firstName: "Max",
+    lastName: "Mustermann",
+    isGPSLocationAllowed: true,
+    avatar: "picture.jpg"
+  }
+  const requestObject: LambdaInputEvent = {
+    body: JSON.stringify(user)
+  }
+  const result = await handler(requestObject)
+  console.log(JSON.stringify(result))
+})()
