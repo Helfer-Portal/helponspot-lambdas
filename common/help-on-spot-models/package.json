@@ -1,0 +1,15 @@
+{
+  "name": "help-on-spot-models",
+  "version": "1.0.0",
+  "description": "Defines all database models of the help on spot database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typeorm": "^0.2.24",
+    "typescript": "^3.8.3"
+  }
+}
