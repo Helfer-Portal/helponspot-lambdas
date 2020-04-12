@@ -1,7 +1,7 @@
 import { Connection, createConnection } from 'typeorm';
-import {Address, Qualification, User} from "../../../common/help-on-spot-models/src";
 import {PostgresConnectionOptions} from "typeorm/driver/postgres/PostgresConnectionOptions";
 import { ormConfig } from "./ormConfig";
+import User from "./User";
 
 export class Database {
   private connection?: Connection;
@@ -10,7 +10,7 @@ export class Database {
     try {
       this.connection = await createConnection({
         ...ormConfig,
-        entities: [User, Address, Qualification],
+        entities: [User],
         migrations: [],
         schema: 'public',
         type: 'postgres',

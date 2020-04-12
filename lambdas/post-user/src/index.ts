@@ -30,11 +30,11 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   let savedUser: User;
 
   try {
-    await connection.manager.save(user).then(user => savedUser = user);
+    await connection!.manager.save(user).then(user => savedUser = user);
     return {
       isBase64Encoded: false,
       statusCode: 200,
-      body: JSON.stringify(savedUser),
+      body: JSON.stringify(savedUser!),
       headers: defaultHeader
     }
   } catch (e) {
@@ -45,5 +45,8 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
       body: JSON.stringify(e),
       headers: defaultHeader
     }
+  }
+  finally {
+      await db.disconnect()
   }
 }
