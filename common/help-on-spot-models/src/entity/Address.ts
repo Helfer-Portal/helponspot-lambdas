@@ -3,8 +3,8 @@ import {BaseEntity, Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 @Entity()
 export default class Address extends BaseEntity {
 
-  @PrimaryGeneratedColumn()
-  id: number | undefined;
+  @PrimaryGeneratedColumn('uuid')
+  id: string | undefined;
 
   @Column()
   street: string | undefined;
