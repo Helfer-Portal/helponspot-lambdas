@@ -6,7 +6,6 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
-  JoinTable,
   OneToMany
 } from "typeorm";
 import Address from "./Address";
