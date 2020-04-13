@@ -4,13 +4,14 @@
   "description": "Defines all database models of the help on spot database",
   "main": "index.js",
   "scripts": {
-    "build" : "tsc -b",
+    "build": "tsc -b",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "typeorm": "^0.2.24",
+    "pg": "^8.0.2",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
