@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && zip -r app.zip ./dist/** ./node_modules/**"
+    "build": "tsc  && zip -r app.zip ./dist/** ./node_modules/** ./../../common/help-on-spot-models/dist"
   },
   "author": "",
   "license": "ISC",

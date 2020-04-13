@@ -1,15 +1,15 @@
-import {BaseEntity, Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity()
 export default class Qualification extends BaseEntity {
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number | undefined;
 
   @Column()
-  key: string;
+  key: string | undefined;
 
   @Column()
-  name: string;
+  name: string | undefined;
 
 }

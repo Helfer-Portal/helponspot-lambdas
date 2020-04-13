@@ -1,7 +1,7 @@
 import { Connection, createConnection } from 'typeorm';
 import {PostgresConnectionOptions} from "typeorm/driver/postgres/PostgresConnectionOptions";
-import { ormConfig } from "./ormConfig";
-import User from "./User";
+import User from "../entity/User";
+import {ormConfig} from "../ormConfig";
 
 export class Database {
   private connection?: Connection;
