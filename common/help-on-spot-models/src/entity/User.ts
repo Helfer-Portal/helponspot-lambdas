@@ -6,7 +6,7 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
-  OneToMany
+  OneToMany, CreateDateColumn, UpdateDateColumn
 } from "typeorm";
 import Address from "./Address";
 import Qualification from "./Qualification";
@@ -17,7 +17,7 @@ import RequestResponse from "./RequestResponse";
 export default class User extends BaseEntity {
 
   @PrimaryGeneratedColumn('uuid')
-  id: string | undefined;
+  id?: string;
 
   @Column()
   firstName: string;
@@ -34,21 +34,24 @@ export default class User extends BaseEntity {
   @Column()
   avatar: string;
 
-  @Column()
-  createTime: Date | undefined;
+  @CreateDateColumn()
+  createTime?: Date;
+
+  @UpdateDateColumn()
+  updateTime?: Date;
 
   @OneToOne(type => Address)
   @JoinColumn()
-  address: Address | undefined;
+  address?: Address;
 
   @ManyToMany(type => Qualification, qualification => qualification.users)
-  qualifications: Qualification[] | undefined;
+  qualifications?: Qualification[];
 
   @ManyToMany(type => Organisation, organisation => organisation.users)
-  organisations: Organisation[] | undefined;
+  organisations?: Organisation[];
 
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.user)
-  requestResponses: RequestResponse[] | undefined;
+  requestResponses?: RequestResponse[];
 
   constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, email: string, avatar: string) {
     super();

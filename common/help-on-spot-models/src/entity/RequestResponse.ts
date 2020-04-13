@@ -12,18 +12,18 @@ enum Status {
 export default class RequestResponse extends BaseEntity {
 
   @PrimaryGeneratedColumn('uuid')
-  id: string | undefined;
+  id?: string;
 
   @Column()
-  status: Status | undefined;
+  status?: Status;
 
   @Column()
-  createTime: Date | undefined;
+  createTime?: Date;
 
   @ManyToOne(type => User, )
-  user: User | undefined;
+  user?: User;
 
   @ManyToOne(type => Request, )
-  request: Request | undefined;
+  request?: Request;
 
 }

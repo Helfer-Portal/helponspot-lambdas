@@ -6,18 +6,18 @@ import Request from "./Request";
 export default class Qualification extends BaseEntity {
 
   @PrimaryGeneratedColumn('uuid')
-  id: string | undefined;
+  id?: string;
 
   @Column()
-  key: string | undefined;
+  key?: string;
 
   @Column()
-  name: string | undefined;
+  name?: string;
 
   @ManyToMany(type => User, user => user.qualifications)
-  users: User[] | undefined;
+  users?: User[];
 
   @ManyToMany(type => Request, request => request.qualifications)
-  requests: Request[] | undefined;
+  requests?: Request[];
 
 }

@@ -16,31 +16,31 @@ import Request from "./Request";
 export default class Organisation extends BaseEntity {
 
   @PrimaryGeneratedColumn('uuid')
-  id: string | undefined;
+  id?: string;
 
   @Column()
-  name: string | undefined;
+  name?: string;
 
   @Column()
-  teaser: string | undefined;
+  teaser?: string;
 
   @Column()
-  avatar: string | undefined;
+  avatar?: string;
 
   @Column()
-  email: string | undefined;
+  email?: string;
 
   @Column()
-  createTime: Date | undefined;
+  createTime?: Date;
 
   @OneToOne(type => Address)
   @JoinColumn()
-  address: Address | undefined;
+  address?: Address;
 
   @ManyToMany(type => User, user => user.organisations)
-  users: User[] | undefined;
+  users?: User[];
 
   @OneToMany(type => Request, request => request.organisation)
-  requests: Request[] | undefined;
+  requests?: Request[];
 
 }

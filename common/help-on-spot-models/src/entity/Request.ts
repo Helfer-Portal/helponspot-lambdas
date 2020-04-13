@@ -18,37 +18,37 @@ import RequestResponse from "./RequestResponse";
 export default class Request extends BaseEntity {
 
   @PrimaryGeneratedColumn('uuid')
-  id: string | undefined;
+  id?: string;
 
   @Column()
-  isActive: number | undefined;
+  isActive?: number;
 
   @Column()
-  start: Date | undefined;
+  start?: Date;
 
   @Column()
-  end: Date | undefined;
+  end?: Date;
 
   @Column()
-  city: string | undefined;
+  city?: string;
 
   @Column()
-  country: string | undefined;
+  country?: string;
 
   @Column()
-  createTime: Date | undefined;
+  createTime?: Date;
 
   @OneToOne(type => Address)
   @JoinColumn()
-  address: Address | undefined;
+  address?: Address;
 
   @ManyToMany(type => Qualification, qualification => qualification.requests)
-  qualifications: Qualification[] | undefined;
+  qualifications?: Qualification[];
 
   @ManyToOne(type => Organisation, organisation => organisation.requests)
-  organisation: Organisation | undefined;
+  organisation?: Organisation;
 
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.request)
-  requestResponses: RequestResponse[] | undefined;
+  requestResponses?: RequestResponse[];
 
 }
