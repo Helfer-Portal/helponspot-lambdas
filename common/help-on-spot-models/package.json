@@ -4,6 +4,7 @@
   "description": "Defines all database models of the help on spot database",
   "main": "index.js",
   "scripts": {
+    "build" : "tsc -b",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -11,5 +12,8 @@
   "dependencies": {
     "typeorm": "^0.2.24",
     "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.11.0"
   }
 }

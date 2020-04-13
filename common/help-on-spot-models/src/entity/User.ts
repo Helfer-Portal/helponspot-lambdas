@@ -4,7 +4,7 @@ import {BaseEntity, Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 export default class User extends BaseEntity {
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number | undefined;
 
   @Column()
   firstName: string;
@@ -18,7 +18,7 @@ export default class User extends BaseEntity {
   @Column()
   avatar: string;
 
-  constructor(firstName, lastName, isGPSLocationAllowed, avatar) {
+  constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, avatar: string) {
     super();
     this.firstName = firstName;
     this.lastName = lastName;

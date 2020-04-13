@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
-import {Database} from "./Database";
-import User from "./User";
+import {User} from "../../../common/help-on-spot-models/dist";
+import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 
 interface LambdaResponse {
   isBase64Encoded: boolean
@@ -27,14 +27,13 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   const db = new Database();
   const connection = await db.connect();
 
-  let savedUser: User;
 
   try {
-    await connection!.manager.save(user).then(user => savedUser = user);
-    return {
+      let savedUser: User = await connection!.manager.save(user)
+      return {
       isBase64Encoded: false,
       statusCode: 200,
-      body: JSON.stringify(savedUser!),
+      body: JSON.stringify(savedUser),
       headers: defaultHeader
     }
   } catch (e) {

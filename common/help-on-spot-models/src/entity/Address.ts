@@ -4,21 +4,21 @@ import {BaseEntity, Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 export default class Address extends BaseEntity {
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number | undefined;
 
   @Column()
-  street: string;
+  street: string | undefined;
 
   @Column()
-  houseNumber: string;
+  houseNumber: string | undefined;
 
   @Column()
-  postalCode: string;
+  postalCode: string | undefined;
 
   @Column()
-  city: string;
+  city: string | undefined;
 
   @Column()
-  country: string;
+  country: string | undefined;
 
 }
