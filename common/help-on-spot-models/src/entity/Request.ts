@@ -7,7 +7,9 @@ import {
   ManyToMany,
   OneToOne,
   JoinColumn,
-  OneToMany
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
 } from "typeorm";
 import Organisation from "./Organisation";
 import Qualification from "./Qualification";
@@ -35,8 +37,11 @@ export default class Request extends BaseEntity {
   @Column()
   country?: string;
 
-  @Column()
+  @CreateDateColumn()
   createTime?: Date;
+
+  @UpdateDateColumn()
+  updateTime?: Date;
 
   @OneToOne(type => Address)
   @JoinColumn()

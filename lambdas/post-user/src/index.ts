@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+require('dotenv').config();
 import {User} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 
@@ -18,12 +18,11 @@ const defaultHeader = {
 }
 
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
-  dotenv.config()
   console.log(JSON.parse(event.body))
 
   const userData: User = JSON.parse(event.body)
 
-  let user = new User(userData.firstName, userData.lastName, userData.isGPSLocationAllowed, userData.avatar);
+  let user = new User(userData.firstName, userData.lastName, userData.isGPSLocationAllowed, userData.email, userData.avatar);
   const db = new Database();
   const connection = await db.connect();
 

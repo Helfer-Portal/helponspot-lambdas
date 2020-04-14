@@ -6,7 +6,9 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
-  OneToMany
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
 } from "typeorm";
 import Address from "./Address";
 import User from "./User";
@@ -30,15 +32,18 @@ export default class Organisation extends BaseEntity {
   @Column()
   email?: string;
 
-  @Column()
+  @CreateDateColumn()
   createTime?: Date;
+
+  @UpdateDateColumn()
+  updateTime?: Date;
 
   @OneToOne(type => Address)
   @JoinColumn()
   address?: Address;
 
   @ManyToMany(type => User, user => user.organisations)
-  users?: User[];
+  responsibles?: User[];
 
   @OneToMany(type => Request, request => request.organisation)
   requests?: Request[];

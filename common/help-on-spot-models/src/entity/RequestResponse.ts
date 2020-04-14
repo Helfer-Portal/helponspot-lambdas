@@ -1,4 +1,12 @@
-import {BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn
+} from "typeorm";
 import User from "./User";
 import Request from "./Request";
 
@@ -17,13 +25,16 @@ export default class RequestResponse extends BaseEntity {
   @Column()
   status?: Status;
 
-  @Column()
+  @CreateDateColumn()
   createTime?: Date;
 
-  @ManyToOne(type => User, )
+  @UpdateDateColumn()
+  updateTime?: Date;
+
+  @ManyToOne(type => User)
   user?: User;
 
-  @ManyToOne(type => Request, )
+  @ManyToOne(type => Request)
   request?: Request;
 
 }
