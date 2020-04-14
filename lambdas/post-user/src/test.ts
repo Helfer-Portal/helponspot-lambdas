@@ -5,6 +5,7 @@ import {  handler, LambdaInputEvent } from './index'
     firstName: "Max",
     lastName: "Mustermann",
     isGPSLocationAllowed: true,
+    email: "test@test.de",
     avatar: "picture.jpg"
   }
   const requestObject: LambdaInputEvent = {
