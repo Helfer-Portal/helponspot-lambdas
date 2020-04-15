@@ -6,7 +6,7 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
-  OneToMany, CreateDateColumn, UpdateDateColumn
+  OneToMany, CreateDateColumn, UpdateDateColumn, JoinTable
 } from "typeorm";
 import Address from "./Address";
 import Qualification from "./Qualification";
@@ -45,9 +45,11 @@ export default class User extends BaseEntity {
   address?: Address;
 
   @ManyToMany(type => Qualification, qualification => qualification.users)
+  @JoinTable()
   qualifications?: Qualification[];
 
   @ManyToMany(type => Organisation, organisation => organisation.responsibles)
+  @JoinTable()
   organisations?: Organisation[];
 
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.user)
