@@ -24,13 +24,13 @@ export default class Organisation extends BaseEntity {
   @Column()
   name?: string;
 
-  @Column()
+  @Column({nullable: true})
   teaser?: string;
 
   @Column()
-  avatar?: string;
+  logoPath?: string;
 
-  @Column()
+  @Column({nullable: true})
   email?: string;
 
   @CreateDateColumn()
@@ -39,7 +39,7 @@ export default class Organisation extends BaseEntity {
   @UpdateDateColumn()
   updateTime?: Date;
 
-  @OneToOne(type => Address)
+  @OneToOne(type => Address, {cascade: true})
   @JoinColumn()
   address?: Address;
 

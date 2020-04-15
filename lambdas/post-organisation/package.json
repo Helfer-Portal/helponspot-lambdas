@@ -1,0 +1,21 @@
+{
+  "name": "post-organisation",
+  "version": "1.0.0",
+  "description": "Implements post organisation route",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -b"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "typescript": "^3.8.3",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.11.0",
+    "@types/dotenv": "^8.2.0"
+  }
+}

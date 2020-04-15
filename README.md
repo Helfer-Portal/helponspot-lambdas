@@ -17,3 +17,8 @@ This lambda is used for migrations, setting up database schemas and such
 ### post-user
 
 This lambda is used for creating users
+
+
+## start locally
+* ```docker run --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=12345 postgres:10.11```
+* ts-node ./src/test.ts`
