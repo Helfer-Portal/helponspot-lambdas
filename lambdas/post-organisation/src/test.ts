@@ -11,11 +11,13 @@ import {handler, LambdaInputEvent, OrganisationData} from './index'
             country: "string"
         },
         logoPath: "string",
-        responsibles: ["hand´´"]
+        responsibles: ["hand"]
     }
     const requestObject: LambdaInputEvent = {
         body: JSON.stringify(organisaton)
     }
     const result = await handler(requestObject)
+
+    console.log('result\n--------------------\n')
     console.log(JSON.stringify(result))
 })()
