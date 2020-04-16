@@ -7,6 +7,7 @@ import Organisation from "../entity/Organisation";
 import Request from "../entity/Request";
 import RequestResponse from "../entity/RequestResponse";
 import {ormConfig} from "../ormConfig";
+import {QualificationsMigration1586981133000} from "../migration/qualificationsMigration";
 
 export class Database {
   private connection?: Connection;
@@ -15,8 +16,8 @@ export class Database {
     try {
       this.connection = await createConnection({
         ...ormConfig,
-        entities: [User, Address, Qualification, Organisation, Request, RequestResponse],
-        migrations: [],
+        entities: [User, Qualification, Organisation, Address, Request, RequestResponse],
+        migrations: [ QualificationsMigration1586981133000 ],
         schema: 'public',
         type: 'postgres',
         synchronize: true,
@@ -24,6 +25,11 @@ export class Database {
     } catch (e) {
       console.log(e);
     }
+    console.info('Running migrations');
+    const migrations = await this.connection!.runMigrations();
+    migrations.forEach((migration) => {
+      console.info('Executed migration', migration);
+    });
 
     return this.connection;
   }

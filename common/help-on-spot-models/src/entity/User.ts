@@ -40,7 +40,7 @@ export default class User extends BaseEntity {
   @UpdateDateColumn()
   updateTime?: Date;
 
-  @OneToOne(type => Address)
+  @OneToOne(type => Address,{ cascade: true})
   @JoinColumn()
   address?: Address;
 
