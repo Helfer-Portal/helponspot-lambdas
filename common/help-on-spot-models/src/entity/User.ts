@@ -6,7 +6,7 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
-  OneToMany, CreateDateColumn, UpdateDateColumn
+  OneToMany, CreateDateColumn, UpdateDateColumn, JoinTable
 } from "typeorm";
 import Address from "./Address";
 import Qualification from "./Qualification";
@@ -40,11 +40,12 @@ export default class User extends BaseEntity {
   @UpdateDateColumn()
   updateTime?: Date;
 
-  @OneToOne(type => Address,{ cascade: true})
+  @OneToOne(type => Address, { cascade: true })
   @JoinColumn()
   address?: Address;
 
   @ManyToMany(type => Qualification, qualification => qualification.users)
+  @JoinTable()
   qualifications?: Qualification[];
 
   @ManyToMany(type => Organisation, organisation => organisation.responsibles)
@@ -53,13 +54,14 @@ export default class User extends BaseEntity {
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.user)
   requestResponses?: RequestResponse[];
 
-  constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, email: string, avatar: string) {
+  constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, email: string, avatar: string, qualifications: Qualification[]) {
     super();
     this.firstName = firstName;
     this.lastName = lastName;
     this.isGPSLocationAllowed = isGPSLocationAllowed;
     this.email = email;
     this.avatar = avatar;
+    this.qualifications = qualifications;
   }
 
 }

@@ -1,5 +1,5 @@
 require('dotenv').config();
-import {Address, Connection, Qualification, User} from "../../../common/help-on-spot-models/dist";
+import {Address, Connection, Qualification, User, In} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 
 interface LambdaResponse {
@@ -34,8 +34,6 @@ const defaultHeader = {
 }
 
 // TODO: Use lambdaResponse everywhere (maybe move to utils)
-// TODO: Save qualification relationship properly
-
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
   console.log(JSON.parse(event.body))
 
@@ -48,11 +46,13 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     return lambdaResponse(500, 'Database connection');
   }
 
-  if (!(await validateRequest(userData.qualifications, connection))) {
+  const qualifications = await findQualifications(userData.qualifications, connection);
+
+  if (qualifications.length !== userData.qualifications.length) {
     return {
       isBase64Encoded: false,
       statusCode: 400,
-      body: 'Qualifications are not valid!',
+      body: 'Some qualifications are not valid!',
       headers: defaultHeader
     }
   }
@@ -62,14 +62,14 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     userData.lastName,
     userData.isGPSLocationAllowed,
     userData.email,
-    userData.avatar
+    userData.avatar,
+    qualifications
   );
 
   if (userData.address) {
     const address = userData.address;
     user.address = new Address(address.street, address.houseNumber, address.postalCode, address.city, address.country);
   }
-
 
   const userRepository = connection!.getRepository(User);
 
@@ -95,17 +95,12 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   }
 }
 
-async function validateRequest(qualifications: string[], connection: Connection): Promise<boolean> {
+async function findQualifications(qualifications: string[], connection: Connection): Promise<Qualification[]> {
   const qualificationRepository = connection.getRepository(Qualification);
 
-  for (const qualification of qualifications) {
-    const qualificationFound = await qualificationRepository.findOne({ where: { name: qualification } });
-    if (!qualificationFound) {
-      return false;
-    }
-  }
-
-  return true;
+  return qualificationRepository.find({
+    name: In(qualifications)
+  });
 }
 
 function lambdaResponse (statusCode: number, message: string) {
