@@ -22,12 +22,12 @@ export default class Address extends BaseEntity {
   country: string;
 
   constructor(street: string, houseNumber: string, postalCode: string, city: string, country: string) {
-    super();
-    this.houseNumber = houseNumber;
-    this.postalCode = postalCode;
-    this.city = city;
-    this.country = country;
-    this.street = street;
+      super();
+      this.street = street
+      this.houseNumber = houseNumber
+      this.postalCode = postalCode
+      this.city = city
+      this.country = country
   }
 
 }
