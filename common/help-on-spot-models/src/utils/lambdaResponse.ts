@@ -1,12 +1,12 @@
 
 export interface LambdaResponse {
-  isBase64Encoded: boolean
-  statusCode: number
-  body: string
-  headers: any
+  isBase64Encoded: boolean;
+  statusCode: number;
+  body: string;
+  headers: any;
 }
 
-function lambdaResponse (statusCode: number, message: string): LambdaResponse {
+export function lambdaResponse (statusCode: number, message: string): LambdaResponse {
   const defaultHeader = {
     'Content-Type': 'application/json'
   }
@@ -18,5 +18,3 @@ function lambdaResponse (statusCode: number, message: string): LambdaResponse {
     headers: defaultHeader
   }
 }
-
-export { lambdaResponse };
