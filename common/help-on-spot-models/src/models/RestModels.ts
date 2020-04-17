@@ -26,7 +26,4 @@ export interface RequestData {
     endDate: Date
     address: AddressData
     qualifiactionKeys: string[]
-
-    //TODO or take from url
-    organisationId: string
 }

@@ -15,6 +15,7 @@ import Organisation from "./Organisation";
 import Qualification from "./Qualification";
 import Address from "./Address";
 import RequestResponse from "./RequestResponse";
+import {RequestData} from "../models/RestModels";
 
 @Entity()
 export default class Request extends BaseEntity {
@@ -29,7 +30,7 @@ export default class Request extends BaseEntity {
   description?: string;
 
   @Column()
-  isActive?: number;
+  isActive?: boolean;
 
   @Column()
   startDate?: Date;
@@ -43,17 +44,33 @@ export default class Request extends BaseEntity {
   @UpdateDateColumn()
   updateTime?: Date;
 
-  @OneToOne(type => Address)
+  @OneToOne(type => Address, {cascade : true})
   @JoinColumn()
   address?: Address;
 
   @ManyToMany(type => Qualification, qualification => qualification.requests)
   qualifications?: Qualification[];
 
-  @ManyToOne(type => Organisation, organisation => organisation.requests)
+  @ManyToOne(type => Organisation)
   organisation?: Organisation;
 
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.request)
   requestResponses?: RequestResponse[];
+
+  constructor(requestData: RequestData, organisation: Organisation) {
+      super();
+      if (requestData) {
+          this.title = requestData.title
+          this.description = requestData.description
+          this.address = new Address(requestData.address.street, requestData.address.houseNumber, requestData.address.postalCode, requestData.address.city, requestData.address.country)
+          this.isActive = requestData.isActive ? requestData.isActive : true
+          this.organisation = organisation
+
+          // TODO
+          this.qualifications = []
+          this.startDate = new Date()
+          this.endDate = new Date()
+      }
+  }
 
 }

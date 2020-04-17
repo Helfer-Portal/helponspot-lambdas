@@ -15,12 +15,12 @@ import {RequestData} from "../../../common/help-on-spot-models/dist/models/RestM
         endDate: new Date(),
         startDate: new Date(),
         isActive: false,
-        organisationId: "123",
         qualifiactionKeys: [""]
 
     }
     const requestObject: LambdaInputEvent = {
-        body: JSON.stringify(organisaton)
+        body: JSON.stringify(organisaton),
+        path: '/organisations/1677698E-48B5-4D54-A84B-79791CDFCDA0/requests'
     }
     const result = await handler(requestObject)
 

@@ -47,9 +47,6 @@ export default class Organisation extends BaseEntity {
     @ManyToMany(type => User, user => user.organisations, {cascade: true})
     responsibles?: User[];
 
-    @OneToMany(type => Request, request => request.organisation)
-    requests?: Request[];
-
 
     constructor(organisationData: OrganisationData, responsibles: User[]) {
         super();
