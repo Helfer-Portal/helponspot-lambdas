@@ -1,8 +1,12 @@
-import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
+import {OrganisationData} from "../../../common/help-on-spot-models/src/models/RestModels";
 
 require('dotenv').config();
-import {Address} from "../../../common/help-on-spot-models/dist";
+import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
+import {In} from "typeorm";
+
+import {Address, User} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
+
 
 interface LambdaResponse {
     isBase64Encoded: boolean
@@ -19,21 +23,6 @@ const defaultHeader = {
     'Content-Type': 'application/json'
 }
 
-export interface OrganisationData {
-    name: string
-    address: AddressData
-    logoPath: string
-    responsibles: string[]
-}
-
-interface AddressData {
-    street: string
-    postalCode: string
-    houseNumber: string
-    city: string
-    country: string
-}
-
 
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
     console.log(JSON.parse(event.body))
@@ -41,23 +30,29 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
     const db = new Database();
     const connection = await db.connect();
+    if (!connection) {
+        throw Error("ba")
+    }
 
     try {
-        const organisation = new Organisation()
-        const addressData = organisationData.address
-        organisation.address = new Address(addressData.street, addressData.houseNumber, addressData.postalCode, addressData.city, addressData.country)
 
-        organisation.logoPath = organisationData.logoPath
-        organisation.name = organisationData.name
-        // TODO: check if users exist
-        // organisation.responsibles = organisationData.responsibles
-        organisation.createTime = new Date()
-        organisation.updateTime = new Date()
 
-        organisation.email = ""
 
-        let saveOrganisation: Organisation = await connection!.manager.save(organisation)
+        const userRepository = connection.getRepository(User)
+        const realUsers: User[] = await userRepository.createQueryBuilder("user").where("user.id IN (:...res)", { res: organisationData.responsibles }).execute()
+        const organisation = new Organisation(organisationData, realUsers)
+
+        console.log(`Found ${realUsers.length} users`)
+        console.log(JSON.stringify(realUsers) + "\n")
+
+        let saveOrganisation: Organisation = await connection.manager.save(organisation)
+
+
+
+
         console.log('Persisted new Organisation')
+
+
 
         return {
             isBase64Encoded: false,

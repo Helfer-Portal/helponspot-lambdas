@@ -1,8 +1,9 @@
-import {handler, LambdaInputEvent, OrganisationData} from './index'
+import {handler, LambdaInputEvent} from './index'
+import {OrganisationData} from "../../../common/help-on-spot-models/dist/models/RestModels";
 
 (async function () {
     const organisaton: OrganisationData = {
-        name: "ba",
+        name: "huhu",
         address: {
             street: "string",
             postalCode: "string",
@@ -10,8 +11,9 @@ import {handler, LambdaInputEvent, OrganisationData} from './index'
             city: "string",
             country: "string"
         },
+        email: "a@v",
         logoPath: "string",
-        responsibles: ["hand"]
+        responsibles: ["5bee3dc3-a0bf-4d19-bd94-87451feb0c3c"]
     }
     const requestObject: LambdaInputEvent = {
         body: JSON.stringify(organisaton)
