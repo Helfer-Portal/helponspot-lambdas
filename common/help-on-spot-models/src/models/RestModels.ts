@@ -16,3 +16,17 @@ export interface AddressData {
     city: string
     country: string
 }
+
+
+export interface RequestData {
+    title: string,
+    description: string
+    isActive: boolean
+    startDate: Date
+    endDate: Date
+    address: AddressData
+    qualifiactionKeys: string[]
+
+    //TODO or take from url
+    organisationId: string
+}

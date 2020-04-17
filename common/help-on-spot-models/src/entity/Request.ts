@@ -23,19 +23,19 @@ export default class Request extends BaseEntity {
   id?: string;
 
   @Column()
+  title?: string;
+
+  @Column()
+  description?: string;
+
+  @Column()
   isActive?: number;
 
   @Column()
-  start?: Date;
+  startDate?: Date;
 
   @Column()
-  end?: Date;
-
-  @Column()
-  city?: string;
-
-  @Column()
-  country?: string;
+  endDate?: Date;
 
   @CreateDateColumn()
   createTime?: Date;
