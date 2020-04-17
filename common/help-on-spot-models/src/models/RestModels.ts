@@ -1,3 +1,6 @@
+/**
+ * Rest Models, should be in union in what is defined in the API gateway
+ */
 export interface OrganisationData {
     name: string
     address: AddressData

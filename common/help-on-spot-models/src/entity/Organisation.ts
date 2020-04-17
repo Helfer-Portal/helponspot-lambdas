@@ -44,7 +44,7 @@ export default class Organisation extends BaseEntity {
     @JoinColumn()
     address?: Address;
 
-    @ManyToMany(type => User, user => user.organisations)
+    @ManyToMany(type => User, user => user.organisations, {cascade: true})
     responsibles?: User[];
 
     @OneToMany(type => Request, request => request.organisation)
@@ -58,10 +58,13 @@ export default class Organisation extends BaseEntity {
             this.email = organisationData.email
             this.responsibles = responsibles
             this.logoPath = organisationData.logoPath
-            console.log('>>>>>' + JSON.stringify(responsibles))
-            this.address = new Address(organisationData.address.street, organisationData.address.houseNumber, organisationData.address.postalCode, organisationData.address.city, organisationData.address.country)
+            this.address = new Address(
+                organisationData.address.street,
+                organisationData.address.houseNumber,
+                organisationData.address.postalCode,
+                organisationData.address.city,
+                organisationData.address.country)
         }
     }
-
 
 }

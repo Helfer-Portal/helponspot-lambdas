@@ -1,10 +1,8 @@
-import {OrganisationData} from "../../../common/help-on-spot-models/src/models/RestModels";
-
 require('dotenv').config();
-import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
-import {In} from "typeorm";
 
-import {Address, User} from "../../../common/help-on-spot-models/dist";
+import {OrganisationData} from "../../../common/help-on-spot-models/src/models/RestModels";
+import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
+import {User} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 
 
@@ -31,37 +29,24 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     const db = new Database();
     const connection = await db.connect();
     if (!connection) {
-        throw Error("ba")
+        throw Error("Unable to Connect to the database")
     }
 
     try {
-
-
-
         const userRepository = connection.getRepository(User)
-        const realUsers: User[] = await userRepository.createQueryBuilder("user").where("user.id IN (:...res)", { res: organisationData.responsibles }).execute()
-        const organisation = new Organisation(organisationData, realUsers)
-
-        console.log(`Found ${realUsers.length} users`)
-        console.log(JSON.stringify(realUsers) + "\n")
-
-        let saveOrganisation: Organisation = await connection.manager.save(organisation)
-
-
-
-
-        console.log('Persisted new Organisation')
-
-
-
+        const users: User[] = await userRepository.createQueryBuilder("user").where("user.id IN (:...res)", { res: organisationData.responsibles }).getMany()
+        console.log(`Found ${users.length} valid users of ${organisationData.responsibles.length} requested`)
+        const organisation = new Organisation(organisationData, users)
+        let persistedOrganisation: Organisation = await connection.manager.save(organisation)
+        console.log(`Persisted new Organisation: ${JSON.stringify(persistedOrganisation)}`)
         return {
             isBase64Encoded: false,
             statusCode: 200,
-            body: JSON.stringify(saveOrganisation),
+            body: JSON.stringify(persistedOrganisation),
             headers: defaultHeader
         }
     } catch (e) {
-        console.log(`Error during lambda execution: ${JSON.stringify(e)}`)
+        console.log(`Error during lambda execution:\n ${JSON.stringify(e)}`)
         return {
             isBase64Encoded: false,
             statusCode: 500,
