@@ -49,6 +49,7 @@ export default class User extends BaseEntity {
   qualifications?: Qualification[];
 
   @ManyToMany(type => Organisation, organisation => organisation.responsibles)
+  @JoinTable()
   organisations?: Organisation[];
 
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.user)
