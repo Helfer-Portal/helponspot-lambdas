@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
-import {Address, Connection, Qualification, User, In} from "../../../common/help-on-spot-models/dist";
+import {Address, Connection, Qualification, User, In, Repository} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 
 
@@ -37,6 +37,14 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     return lambdaResponse(500, 'No Database connection');
   }
 
+  const userRepository = connection!.getRepository(User);
+
+  const email = await findEmail(userData.email, userRepository);
+
+  if (email) {
+    return lambdaResponse(400, 'User with email already exists!')
+  }
+
   const qualifications = await findQualifications(userData.qualifications, connection);
 
   if (qualifications.length !== userData.qualifications.length) {
@@ -57,7 +65,6 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     user.address = new Address(address.street, address.houseNumber, address.postalCode, address.city, address.country);
   }
 
-  const userRepository = connection!.getRepository(User);
 
   try {
     const savedUser: User = await userRepository.save(user);
@@ -75,6 +82,12 @@ async function findQualifications(qualifications: string[], connection: Connecti
   const qualificationRepository = connection.getRepository(Qualification);
 
   return qualificationRepository.find({
-    name: In(qualifications)
+    key: In(qualifications)
+  });
+}
+
+async function findEmail(email: string, userRepository: Repository<User>): Promise<User | undefined> {
+  return userRepository.findOne({
+    where: { email: email }
   });
 }

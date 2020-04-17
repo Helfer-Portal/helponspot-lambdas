@@ -15,8 +15,8 @@ import {  handler, LambdaInputEvent } from './index'
       country: "Germany"
     },
    qualifications: [
-      "Führerschein",
-      "medizinische Grundausbildung"
+      "driversLicence",
+      "medicalEducation"
     ]
   }
   const requestObject: LambdaInputEvent = {

@@ -28,7 +28,7 @@ export default class User extends BaseEntity {
   @Column()
   isGPSLocationAllowed: boolean;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
