@@ -1,13 +1,9 @@
 require('dotenv').config();
+
+import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import {Address, Connection, Qualification, User, In} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 
-interface LambdaResponse {
-  isBase64Encoded: boolean
-  statusCode: number
-  body: string
-  headers: any
-}
 
 export interface LambdaInputEvent {
   body: string
@@ -29,11 +25,6 @@ interface UserData {
   }
 }
 
-const defaultHeader = {
-  'Content-Type': 'application/json'
-}
-
-// TODO: Use lambdaResponse everywhere (maybe move to utils)
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
   console.log(JSON.parse(event.body))
 
@@ -43,18 +34,13 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   const connection = await db.connect();
 
   if (!connection) {
-    return lambdaResponse(500, 'Database connection');
+    return lambdaResponse(500, 'No Database connection');
   }
 
   const qualifications = await findQualifications(userData.qualifications, connection);
 
   if (qualifications.length !== userData.qualifications.length) {
-    return {
-      isBase64Encoded: false,
-      statusCode: 400,
-      body: 'Some qualifications are not valid!',
-      headers: defaultHeader
-    }
+    return lambdaResponse(400, 'Some qualifications are not valid!');
   }
 
   const user = new User(
@@ -75,20 +61,10 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
   try {
     const savedUser: User = await userRepository.save(user);
-    return {
-      isBase64Encoded: false,
-      statusCode: 200,
-      body: JSON.stringify(savedUser),
-      headers: defaultHeader
-    }
+    return lambdaResponse(200, JSON.stringify(savedUser));
   } catch (e) {
     console.log(`Error during lambda execution: ${JSON.stringify(e)}`)
-    return {
-      isBase64Encoded: false,
-      statusCode: 500,
-      body: JSON.stringify(e),
-      headers: defaultHeader
-    }
+    return lambdaResponse(500, JSON.stringify(e));
   }
   finally {
       await db.disconnect()
@@ -101,13 +77,4 @@ async function findQualifications(qualifications: string[], connection: Connecti
   return qualificationRepository.find({
     name: In(qualifications)
   });
-}
-
-function lambdaResponse (statusCode: number, message: string) {
-  return {
-    isBase64Encoded: false,
-    statusCode,
-    body: message,
-    headers: defaultHeader
-  }
 }
