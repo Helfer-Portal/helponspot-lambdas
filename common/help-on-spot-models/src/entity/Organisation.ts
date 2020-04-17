@@ -8,7 +8,8 @@ import {
   ManyToMany,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  JoinTable
 } from "typeorm";
 import Address from "./Address";
 import User from "./User";
