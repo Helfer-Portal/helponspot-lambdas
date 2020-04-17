@@ -6,7 +6,18 @@ import {  handler, LambdaInputEvent } from './index'
     lastName: "Mustermann",
     isGPSLocationAllowed: true,
     email: "test@test.de",
-    avatar: "picture.jpg"
+    avatar: "picture.jpg",
+    address: {
+      houseNumber: "12 a",
+      city: "Munich",
+      street: "Hauptstraße",
+      postalCode: "089",
+      country: "Germany"
+    },
+   qualifications: [
+      "driversLicence",
+      "medicalEducation"
+    ]
   }
   const requestObject: LambdaInputEvent = {
     body: JSON.stringify(user)

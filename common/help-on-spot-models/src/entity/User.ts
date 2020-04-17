@@ -28,7 +28,7 @@ export default class User extends BaseEntity {
   @Column()
   isGPSLocationAllowed: boolean;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -40,7 +40,7 @@ export default class User extends BaseEntity {
   @UpdateDateColumn()
   updateTime?: Date;
 
-  @OneToOne(type => Address)
+  @OneToOne(type => Address, { cascade: true })
   @JoinColumn()
   address?: Address;
 
@@ -55,13 +55,14 @@ export default class User extends BaseEntity {
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.user)
   requestResponses?: RequestResponse[];
 
-  constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, email: string, avatar: string) {
+  constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, email: string, avatar: string, qualifications: Qualification[]) {
     super();
     this.firstName = firstName;
     this.lastName = lastName;
     this.isGPSLocationAllowed = isGPSLocationAllowed;
     this.email = email;
     this.avatar = avatar;
+    this.qualifications = qualifications;
   }
 
 }
