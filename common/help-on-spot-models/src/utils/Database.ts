@@ -20,7 +20,6 @@ export class Database {
         migrations: [ QualificationsMigration1586981133000 ],
         schema: 'public',
         type: 'postgres',
-        synchronize: true,
       } as PostgresConnectionOptions);
     } catch (e) {
       console.log(e);
