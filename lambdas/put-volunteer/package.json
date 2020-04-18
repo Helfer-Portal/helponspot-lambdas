@@ -1,7 +1,7 @@
 {
-  "name": "post-volunteer",
+  "name": "put-volunteer",
   "version": "1.0.0",
-  "description": "Implements post volunteer route",
+  "description": "Implements put volunteer route",
   "main": "index.js",
   "scripts": {
     "test": "tsc -b && ts-node ./src/test.ts",
