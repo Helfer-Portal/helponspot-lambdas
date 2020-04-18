@@ -35,7 +35,8 @@ import Organisation from "../../../common/help-on-spot-models/dist/entity/Organi
     }
     const requestObject: LambdaInputEvent = {
         body: JSON.stringify(requestData),
-        path: `/organisations/${org.id}/requests`
+        path: `/organisations/${org.id}/requests`,
+        pathParameters: {organisationId: org.id}
     }
     const result = await handler(requestObject)
 

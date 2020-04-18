@@ -11,6 +11,7 @@ import Request from "../../../common/help-on-spot-models/dist/entity/Request";
 export interface LambdaInputEvent {
     body: string
     path: string
+    pathParameters: any
 }
 
 
@@ -36,12 +37,12 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 }
 
 async function findOrganisation(event: LambdaInputEvent, connection: Connection): Promise<Organisation> {
-    const orgId = event.path.split('/')[2]
-    if (orgId) {
-        console.log(`for OrgId: ${orgId}`)
-        const organisation = await connection.getRepository(Organisation).findOne({id: orgId})
+    const organisationId = event.pathParameters.organisationId
+    if (organisationId) {
+        console.log(`for OrgId: ${organisationId}`)
+        const organisation = await connection.getRepository(Organisation).findOne({id: organisationId})
         if (!organisation) {
-            throw Error(`Could not find Organisation for id ${orgId}`)
+            throw Error(`Could not find Organisation for id ${organisationId}`)
         }
         console.log(`found org: ${JSON.stringify(organisation)}`)
 
