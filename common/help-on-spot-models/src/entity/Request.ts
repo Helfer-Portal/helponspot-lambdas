@@ -65,11 +65,11 @@ export default class Request extends BaseEntity {
           this.address = new Address(requestData.address.street, requestData.address.houseNumber, requestData.address.postalCode, requestData.address.city, requestData.address.country)
           this.isActive = requestData.isActive ? requestData.isActive : true
           this.organisation = organisation
+          this.startDate = new Date(Date.parse(requestData.startDate))
+          this.endDate = new Date(Date.parse(requestData.endDate))
 
           // TODO
           this.qualifications = []
-          this.startDate = new Date()
-          this.endDate = new Date()
       }
   }
 

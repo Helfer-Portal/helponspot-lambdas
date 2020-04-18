@@ -1,8 +1,23 @@
 import {handler, LambdaInputEvent} from './index'
-import {RequestData} from "../../../common/help-on-spot-models/dist/models/RestModels";
+import {AddressData, OrganisationData, RequestData} from "../../../common/help-on-spot-models/dist/models/RestModels";
 
+    import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
+import {User} from "../../../common/help-on-spot-models/dist";
+import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
 (async function () {
-    const organisaton: RequestData = {
+
+    const connection = await new Database().connect()
+    const userRepo = connection!.getRepository(User)
+    const orgRepo = connection!.getRepository(Organisation)
+
+    const randomEmail = Math.random().toString(36).substring(7) + "@test"
+    const user = await userRepo.save(new User("Test", "User", false, randomEmail, "", []))
+    const address: AddressData = {city: "c", country: "c", houseNumber: "h", postalCode: "1", street: "s"}
+    const orgData: OrganisationData = {address: address, email: "@lo", logoPath: "l", name: "o", responsibles: []}
+    const org = await orgRepo.save(new Organisation(orgData, [user]))
+    await connection!.close()
+
+    const requestData: RequestData = {
         title: "huhu",
         address: {
             street: "string",
@@ -12,15 +27,15 @@ import {RequestData} from "../../../common/help-on-spot-models/dist/models/RestM
             country: "string"
         },
         description: "desc",
-        endDate: new Date(),
-        startDate: new Date(),
+        endDate: "2004-07-11",
+        startDate: "2004-07-12",
         isActive: false,
-        qualifiactionKeys: [""]
+        qualifiactionKeys: ["physicallyFit"]
 
     }
     const requestObject: LambdaInputEvent = {
-        body: JSON.stringify(organisaton),
-        path: '/organisations/1677698E-48B5-4D54-A84B-79791CDFCDA0/requests'
+        body: JSON.stringify(requestData),
+        path: `/organisations/${org.id}/requests`
     }
     const result = await handler(requestObject)
 

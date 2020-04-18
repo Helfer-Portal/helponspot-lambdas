@@ -22,8 +22,8 @@ export interface RequestData {
     title: string,
     description: string
     isActive: boolean
-    startDate: Date
-    endDate: Date
+    startDate: string
+    endDate: string
     address: AddressData
     qualifiactionKeys: string[]
 }
