@@ -3,7 +3,7 @@ import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-model
 require('dotenv').config();
 import {RequestData} from "../../../common/help-on-spot-models/dist/models/RestModels";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
-import {Connection} from "../../../common/help-on-spot-models/dist/index";
+import {Connection, In, Qualification} from "../../../common/help-on-spot-models/dist/index";
 import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
 import Request from "../../../common/help-on-spot-models/dist/entity/Request";
 
@@ -12,6 +12,7 @@ export interface LambdaInputEvent {
     body: string
     path: string
 }
+
 
 
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
@@ -23,7 +24,8 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     try {
         const connection = await db.connect();
         const organisation: Organisation | undefined = await findOrganisation(event, connection!)
-        const request = new Request(requestData, organisation)
+        const qualifications: Qualification[] = await findQualifications(requestData.qualifiactionKeys, connection!)
+        const request = new Request(requestData, organisation, qualifications)
         const savedRequest = await connection!.getRepository(Request).save(request)
         return lambdaResponse(200,  JSON.stringify(savedRequest))
     } catch (e) {
@@ -48,4 +50,10 @@ async function findOrganisation(event: LambdaInputEvent, connection: Connection)
     } else {
         throw Error(`Could not determine OrganisationId from path ${JSON.stringify(event)}`)
     }
+}
+
+async function findQualifications(qualifiactionKeys: string[], connection: Connection) {
+    const qualificaitons = await connection.getRepository(Qualification).find({key : In(qualifiactionKeys)})
+    console.log(`Found '${qualificaitons.length}' qualifications for '${qualifiactionKeys.length}' key`)
+    return qualificaitons
 }

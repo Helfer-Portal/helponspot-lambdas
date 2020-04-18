@@ -1,15 +1,15 @@
 import {
-  BaseEntity,
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  ManyToMany,
-  OneToOne,
-  JoinColumn,
-  OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn
+    BaseEntity,
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    ManyToMany,
+    OneToOne,
+    JoinColumn,
+    OneToMany,
+    CreateDateColumn,
+    UpdateDateColumn, JoinTable
 } from "typeorm";
 import Organisation from "./Organisation";
 import Qualification from "./Qualification";
@@ -49,6 +49,7 @@ export default class Request extends BaseEntity {
   address?: Address;
 
   @ManyToMany(type => Qualification, qualification => qualification.requests)
+  @JoinTable({name: 'join_request_qualification'})
   qualifications?: Qualification[];
 
   @ManyToOne(type => Organisation)
@@ -57,19 +58,21 @@ export default class Request extends BaseEntity {
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.request)
   requestResponses?: RequestResponse[];
 
-  constructor(requestData: RequestData, organisation: Organisation) {
+  constructor(requestData: RequestData, organisation: Organisation, qualifiactions: Qualification[]) {
       super();
       if (requestData) {
           this.title = requestData.title
           this.description = requestData.description
-          this.address = new Address(requestData.address.street, requestData.address.houseNumber, requestData.address.postalCode, requestData.address.city, requestData.address.country)
+          this.address = new Address(requestData.address.street,
+              requestData.address.houseNumber,
+              requestData.address.postalCode,
+              requestData.address.city,
+              requestData.address.country)
           this.isActive = requestData.isActive ? requestData.isActive : true
           this.organisation = organisation
           this.startDate = new Date(Date.parse(requestData.startDate))
           this.endDate = new Date(Date.parse(requestData.endDate))
-
-          // TODO
-          this.qualifications = []
+          this.qualifications = qualifiactions
       }
   }
 
