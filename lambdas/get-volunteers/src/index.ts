@@ -5,7 +5,7 @@ import RequestResponse from "../../../common/help-on-spot-models/dist/entity/Req
 export interface LambdaInputEvent {
     body: string
     path: string
-    query: any
+    queryStringParameters: any
     pathParameters: any
 }
 
@@ -18,7 +18,8 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
     const responses = await connection!.getRepository(RequestResponse).find({
         where: {
-            requestId: requestId
+            requestId: requestId,
+            status: event.queryStringParameters?.status
         },
     });
 

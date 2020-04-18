@@ -50,10 +50,14 @@ import RequestResponse, {Status} from '../../../common/help-on-spot-models/dist/
     const result = await handler({
         body: "",
         path: `/requests/${request.id}/volunteers`,
-        query: {},
+        queryStringParameters: {
+            status: Status.Pending
+        },
         pathParameters: {
             requestId: request.id,
         }
     })
+    console.log(result);
+    
 
 })()
