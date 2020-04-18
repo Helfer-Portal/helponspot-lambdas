@@ -17,7 +17,6 @@ export interface AddressData {
     country: string
 }
 
-
 export interface RequestData {
     title: string,
     description: string
@@ -26,4 +25,14 @@ export interface RequestData {
     endDate: string
     address: AddressData
     qualifiactionKeys: string[]
+}
+
+export interface UserData {
+    firstName: string;
+    lastName: string;
+    isGPSLocationAllowed: boolean;
+    email: string;
+    avatar: string;
+    qualifications: string[];
+    address: AddressData
 }
