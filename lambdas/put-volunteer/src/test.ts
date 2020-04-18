@@ -5,7 +5,6 @@ import User from "../../../common/help-on-spot-models/dist/entity/User";
 import Request from "../../../common/help-on-spot-models/dist/entity/Request";
 import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
 import { Database } from "../../../common/help-on-spot-models/dist/utils/Database";
-import RequestResponse, { ResponseRequestStatus } from '../../../common/help-on-spot-models/dist/entity/RequestResponse';
 
 
 
@@ -38,26 +37,34 @@ import RequestResponse, { ResponseRequestStatus } from '../../../common/help-on-
 
     }
     const request = await connection!.getRepository(Request).save(new Request(requestData, org, []));
-    await connection!.getRepository(RequestResponse).save({
-        request: request,
-        user: user,
-        status: ResponseRequestStatus.Pending
-    })
-
     await connection!.close()
-
-    
-    const result = await handler({
-        body: "",
-        path: `/requests/${request.id}/volunteers`,
-        queryStringParameters: {
-            status: ResponseRequestStatus.Pending
-        },
-        pathParameters: {
-            requestId: request.id,
-        }
-    })
-    console.log(result);
     
 
+    {
+        const requestObject: LambdaInputEvent = {
+            body: JSON.stringify({
+                response: "accepted"
+            }),
+            path: `/requests/${request.id}/volunteers/${user.id}`,
+            pathParameters: {
+                requestId: request.id,
+                userId: user.id,
+            }
+        };
+        const result = await handler(requestObject)
+    }
+
+    {
+        const requestObject: LambdaInputEvent = {
+            body: JSON.stringify({
+                response: "declined"
+            }),
+            path: `/requests/${request.id}/volunteers/${user.id}`,
+            pathParameters: {
+                requestId: request.id,
+                userId: user.id,
+            }
+        };
+        const result = await handler(requestObject)
+    }    
 })()

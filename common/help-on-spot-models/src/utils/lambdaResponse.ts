@@ -6,15 +6,17 @@ export interface LambdaResponse {
   headers: any;
 }
 
-export function lambdaResponse (statusCode: number, message: string): LambdaResponse {
+export function lambdaResponse (statusCode: number, message: string | object): LambdaResponse {
   const defaultHeader = {
     'Content-Type': 'application/json'
   }
 
+  const body = (typeof message === "string") ? message : JSON.stringify(message);
+
   return {
     isBase64Encoded: false,
     statusCode,
-    body: message,
+    body,
     headers: defaultHeader
   }
 }
