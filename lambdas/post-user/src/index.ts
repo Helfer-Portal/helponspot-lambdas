@@ -27,7 +27,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   const userData: UserData = JSON.parse(event.body)
 
   const db = new Database();
-  const connection = await db.connect();
+  const connection = await db.getConnection();
 
   if (!connection) {
     return lambdaResponse(500, 'No Database connection');
@@ -38,12 +38,14 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   const email = await findEmail(userData.email, userRepository);
 
   if (email) {
+    await db.disconnect(connection)
     return lambdaResponse(400, 'User with email already exists!')
   }
 
   const qualifications = await findQualifications(userData.qualifications, connection);
 
   if (qualifications.length !== userData.qualifications.length) {
+    await db.disconnect(connection)
     return lambdaResponse(400, 'Some qualifications are not valid!');
   }
 
@@ -69,7 +71,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     return lambdaResponse(500, JSON.stringify(e));
   }
   finally {
-      await db.disconnect()
+      await db.disconnect(connection)
   }
 }
 

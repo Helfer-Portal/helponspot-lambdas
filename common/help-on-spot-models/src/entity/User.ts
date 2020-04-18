@@ -31,7 +31,7 @@ export default class User extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   avatar: string;
 
   @CreateDateColumn()
