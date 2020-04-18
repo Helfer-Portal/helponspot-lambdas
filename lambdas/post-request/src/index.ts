@@ -14,7 +14,6 @@ export interface LambdaInputEvent {
 }
 
 
-
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
     console.log(JSON.stringify(event))
     console.log(JSON.parse(event.body))
@@ -24,10 +23,10 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     try {
         const connection = await db.connect();
         const organisation: Organisation | undefined = await findOrganisation(event, connection!)
-        const qualifications: Qualification[] = await findQualifications(requestData.qualifiactionKeys, connection!)
+        const qualifications: Qualification[] | undefined = await findQualifications(requestData.qualifiactionKeys, connection!)
         const request = new Request(requestData, organisation, qualifications)
         const savedRequest = await connection!.getRepository(Request).save(request)
-        return lambdaResponse(200,  JSON.stringify(savedRequest))
+        return lambdaResponse(200, JSON.stringify(savedRequest))
     } catch (e) {
         console.log(`Error during lambda execution:\n ${e}`)
         return lambdaResponse(500, JSON.stringify(e))
@@ -53,7 +52,12 @@ async function findOrganisation(event: LambdaInputEvent, connection: Connection)
 }
 
 async function findQualifications(qualifiactionKeys: string[], connection: Connection) {
-    const qualificaitons = await connection.getRepository(Qualification).find({key : In(qualifiactionKeys)})
-    console.log(`Found '${qualificaitons.length}' qualifications for '${qualifiactionKeys.length}' key`)
-    return qualificaitons
+    if (qualifiactionKeys && qualifiactionKeys.length > 0) {
+        const qualificaitons = await connection.getRepository(Qualification).find({key: In(qualifiactionKeys)})
+        console.log(`Found '${qualificaitons.length}' qualifications for '${qualifiactionKeys.length}' key`)
+        return qualificaitons
+    }
+    else {
+        return undefined
+    }
 }

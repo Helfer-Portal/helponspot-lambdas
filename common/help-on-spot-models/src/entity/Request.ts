@@ -58,7 +58,7 @@ export default class Request extends BaseEntity {
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.request)
   requestResponses?: RequestResponse[];
 
-  constructor(requestData: RequestData, organisation: Organisation, qualifiactions: Qualification[]) {
+  constructor(requestData: RequestData, organisation: Organisation, qualifiactions: Qualification[] | undefined) {
       super();
       if (requestData) {
           this.title = requestData.title
