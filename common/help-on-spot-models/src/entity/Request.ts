@@ -63,11 +63,7 @@ export default class Request extends BaseEntity {
       if (requestData) {
           this.title = requestData.title
           this.description = requestData.description
-          this.address = new Address(requestData.address.street,
-              requestData.address.houseNumber,
-              requestData.address.postalCode,
-              requestData.address.city,
-              requestData.address.country)
+          this.address = new Address(requestData.address)
           this.isActive = requestData.isActive ? requestData.isActive : true
           this.organisation = organisation
           this.startDate = new Date(Date.parse(requestData.startDate))
