@@ -1,20 +1,21 @@
 import {
-  BaseEntity,
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  ManyToMany,
-  OneToOne,
-  JoinColumn,
-  OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn
+    BaseEntity,
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    ManyToMany,
+    OneToOne,
+    JoinColumn,
+    OneToMany,
+    CreateDateColumn,
+    UpdateDateColumn, JoinTable
 } from "typeorm";
 import Organisation from "./Organisation";
 import Qualification from "./Qualification";
 import Address from "./Address";
 import RequestResponse from "./RequestResponse";
+import {RequestData} from "../models/RestModels";
 
 @Entity()
 export default class Request extends BaseEntity {
@@ -23,19 +24,19 @@ export default class Request extends BaseEntity {
   id?: string;
 
   @Column()
-  isActive?: number;
+  title?: string;
 
   @Column()
-  start?: Date;
+  description?: string;
 
   @Column()
-  end?: Date;
+  isActive?: boolean;
 
   @Column()
-  city?: string;
+  startDate?: Date;
 
   @Column()
-  country?: string;
+  endDate?: Date;
 
   @CreateDateColumn()
   createTime?: Date;
@@ -43,17 +44,32 @@ export default class Request extends BaseEntity {
   @UpdateDateColumn()
   updateTime?: Date;
 
-  @OneToOne(type => Address)
+  @OneToOne(type => Address, {cascade : true})
   @JoinColumn()
   address?: Address;
 
   @ManyToMany(type => Qualification, qualification => qualification.requests)
+  @JoinTable({name: 'join_request_qualification'})
   qualifications?: Qualification[];
 
-  @ManyToOne(type => Organisation, organisation => organisation.requests)
+  @ManyToOne(type => Organisation)
   organisation?: Organisation;
 
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.request)
   requestResponses?: RequestResponse[];
+
+  constructor(requestData: RequestData, organisation: Organisation, qualifiactions: Qualification[] | undefined) {
+      super();
+      if (requestData) {
+          this.title = requestData.title
+          this.description = requestData.description
+          this.address = new Address(requestData.address)
+          this.isActive = requestData.isActive ? requestData.isActive : true
+          this.organisation = organisation
+          this.startDate = new Date(Date.parse(requestData.startDate))
+          this.endDate = new Date(Date.parse(requestData.endDate))
+          this.qualifications = qualifiactions
+      }
+  }
 
 }

@@ -13,7 +13,7 @@ import {OrganisationData} from "../../../common/help-on-spot-models/dist/models/
         },
         email: "a@v",
         logoPath: "string",
-        responsibles: ["0EFCDCB7-D876-4D38-8237-8423B8576D72"]
+        responsibles: ["db8c078f-62c4-4ff6-a689-b18de402b257"]
     }
     const requestObject: LambdaInputEvent = {
         body: JSON.stringify(organisaton)

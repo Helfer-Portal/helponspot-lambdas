@@ -16,3 +16,14 @@ export interface AddressData {
     city: string
     country: string
 }
+
+
+export interface RequestData {
+    title: string,
+    description: string
+    isActive: boolean
+    startDate: string
+    endDate: string
+    address: AddressData
+    qualifiactionKeys: string[]
+}

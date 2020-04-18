@@ -1,7 +1,7 @@
 {
-  "name": "post-user",
+  "name": "post-request",
   "version": "1.0.0",
-  "description": "Implements post user route",
+  "description": "Implements post request route",
   "main": "index.js",
   "scripts": {
     "test": "tsc -b && ts-node ./src/test.ts",
@@ -11,8 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "typescript": "^3.8.3",
-    "winston": "^3.2.1"
+    "typescript": "^3.8.3"
   },
   "devDependencies": {
     "@types/node": "^13.11.0",

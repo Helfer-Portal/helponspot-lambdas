@@ -1,4 +1,5 @@
 import {BaseEntity, Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {AddressData} from "../models/RestModels";
 
 @Entity()
 export default class Address extends BaseEntity {
@@ -7,27 +8,29 @@ export default class Address extends BaseEntity {
   id?: string;
 
   @Column()
-  street: string;
+  street?: string;
 
   @Column()
-  houseNumber: string;
+  houseNumber?: string;
 
   @Column()
-  postalCode: string;
+  postalCode?: string;
 
   @Column()
-  city: string;
+  city?: string;
 
   @Column()
-  country: string;
+  country?: string;
 
-  constructor(street: string, houseNumber: string, postalCode: string, city: string, country: string) {
+  constructor(addressData: AddressData) {
       super();
-      this.street = street
-      this.houseNumber = houseNumber
-      this.postalCode = postalCode
-      this.city = city
-      this.country = country
+      if (addressData) {
+      this.street = addressData.street
+          this.houseNumber = addressData.houseNumber
+          this.postalCode = addressData.postalCode
+          this.city = addressData.city
+          this.country = addressData.country
+      }
   }
 
 }

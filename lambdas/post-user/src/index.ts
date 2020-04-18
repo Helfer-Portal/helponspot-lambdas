@@ -1,3 +1,5 @@
+import {AddressData} from "../../../common/help-on-spot-models/dist/models/RestModels";
+
 require('dotenv').config();
 
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
@@ -16,13 +18,7 @@ interface UserData {
   email: string;
   avatar: string;
   qualifications: string[];
-  address: {
-    street: string;
-    houseNumber: string;
-    postalCode: string;
-    city: string;
-    country: string;
-  }
+  address: AddressData
 }
 
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
@@ -63,8 +59,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   );
 
   if (userData.address) {
-    const address = userData.address;
-    user.address = new Address(address.street, address.houseNumber, address.postalCode, address.city, address.country);
+    user.address = new Address(userData.address);
   }
 
 

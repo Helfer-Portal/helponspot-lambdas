@@ -41,15 +41,15 @@ export default class User extends BaseEntity {
   updateTime?: Date;
 
   @OneToOne(type => Address, { cascade: true })
-  @JoinColumn()
+  @JoinColumn({name: 'join_user_address'})
   address?: Address;
 
   @ManyToMany(type => Qualification, qualification => qualification.users)
-  @JoinTable()
+  @JoinTable({name: 'join_user_qualification'})
   qualifications?: Qualification[];
 
   @ManyToMany(type => Organisation, organisation => organisation.responsibles)
-  @JoinTable()
+  @JoinTable({name: 'join_user_organisation'})
   organisations?: Organisation[];
 
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.user)
