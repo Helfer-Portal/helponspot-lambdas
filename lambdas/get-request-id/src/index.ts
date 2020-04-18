@@ -17,7 +17,9 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     const database = new Database();
     const connection = await database.getConnection();
     try {
-        const request: Request | undefined = await connection.getRepository(Request).findOne({id: requestId})
+        const request: Request | undefined = await connection.getRepository(Request)
+            //TODO: Once authentication is in place, adjust relations depending of the user access level
+            .findOne({where :{id: requestId}, relations: ['address', 'qualifications', 'organisation', 'requestResponses'] } )
         if (request) {
             return lambdaResponse(200, JSON.stringify(request))
         } else {
