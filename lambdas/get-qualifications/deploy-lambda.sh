@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+projectName=get-qualifications
+
+npm i
 npm run build
 cd ../../
 
 echo "Include commons in app zip"
-zip -r post-user.zip ./lambdas/get-qualifications/dist/** ./lambdas/get-qualifications/node_modules/** ./common/help-on-spot-models/dist ./common/help-on-spot-models/node_modules
+zip -qq -r ${projectName}.zip ./lambdas/${projectName}/dist/** ./lambdas/${projectName}/node_modules/** ./common/help-on-spot-models/dist ./common/help-on-spot-models/node_modules
 
 echo "deploy lambda"
-aws lambda update-function-code --function-name arn:aws:lambda:eu-central-1:198891906952:function:HoS_get-qualifications_dev --zip-file fileb://post-user.zip
+aws lambda update-function-code --function-name arn:aws:lambda:eu-central-1:198891906952:function:HoS_${projectName}_dev --zip-file fileb://${projectName}.zip
 
-rm post-user.zip
+rm ${projectName}.zip

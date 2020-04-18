@@ -1,7 +1,6 @@
-import {AddressData} from "../../../common/help-on-spot-models/dist/models/RestModels";
-
 require('dotenv').config();
 
+import {AddressData} from "../../../common/help-on-spot-models/dist/models/RestModels";
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import {Address, Connection, Qualification, User, In, Repository} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
