@@ -10,7 +10,7 @@ import {
 import User from "./User";
 import Request from "./Request";
 
-enum Status {
+export enum Status {
   Pending,
   Accepted,
   Declined
