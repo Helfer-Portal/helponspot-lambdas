@@ -7,7 +7,7 @@ export interface LambdaInputEvent {}
 
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
   const db = new Database();
-  const connection = await db.connect();
+  const connection = await db.getConnection();
   try {
       const repo = connection!.getRepository(Qualification)
       const qualifications: Qualification[] = await repo!.find();
@@ -17,6 +17,6 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     return lambdaResponse(500, JSON.stringify(e));
   }
   finally {
-      await db.disconnect()
+      await db.disconnect(connection)
   }
 }
