@@ -1,12 +1,11 @@
-import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
-
 require('dotenv').config();
+
+import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import {RequestData} from "../../../common/help-on-spot-models/dist/models/RestModels";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 import {Connection, In, Qualification} from "../../../common/help-on-spot-models/dist/index";
 import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
 import Request from "../../../common/help-on-spot-models/dist/entity/Request";
-
 
 export interface LambdaInputEvent {
     body: string
@@ -14,10 +13,8 @@ export interface LambdaInputEvent {
     pathParameters: any
 }
 
-
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
     console.log(JSON.stringify(event))
-    console.log(JSON.parse(event.body))
     const requestData: RequestData = JSON.parse(event.body)
 
     const db = new Database();

@@ -1,7 +1,7 @@
 import {handler, LambdaInputEvent} from './index'
 import {AddressData, OrganisationData, RequestData} from "../../../common/help-on-spot-models/dist/models/RestModels";
 
-    import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
+import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 import {User} from "../../../common/help-on-spot-models/dist";
 import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
 (async function () {
