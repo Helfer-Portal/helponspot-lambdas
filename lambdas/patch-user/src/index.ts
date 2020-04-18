@@ -56,7 +56,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   }
 
   if (userPatchData.address) {
-    if (user && user.address && user.address.id) {
+    if (user.address && user.address.id) {
       const oldAddress = await findAddress(user.address.id, connection);
       oldAddress!.city = userPatchData.address.city;
       oldAddress!.postalCode = userPatchData.address.postalCode;
