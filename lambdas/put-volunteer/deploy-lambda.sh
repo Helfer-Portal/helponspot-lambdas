@@ -3,10 +3,12 @@
 projectName=put-volunteer
 
 npm i
+npm prune --production
 npm run build
 cd ../../
 
 echo "Include commons in app zip"
+rm ${projectName}.zip
 zip -qq -r ${projectName}.zip ./lambdas/${projectName}/dist/** ./lambdas/${projectName}/node_modules/** ./common/help-on-spot-models/dist ./common/help-on-spot-models/node_modules
 
 echo "deploy lambda"

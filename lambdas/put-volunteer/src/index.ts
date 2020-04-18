@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 import { LambdaResponse, lambdaResponse } from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import { RequestData } from "../../../common/help-on-spot-models/dist/models/RestModels";
 import { Database } from "../../../common/help-on-spot-models/dist/utils/Database";
