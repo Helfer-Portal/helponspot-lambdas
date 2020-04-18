@@ -36,6 +36,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
     const request = await connection!.getRepository(Request).findOne(requestId);
     if (!request) {
+        await db.disconnect(connection);
         return lambdaResponse(404, {
             error: "Request not found"
         })
@@ -43,6 +44,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
     const user = await connection!.getRepository(User).findOne(userId);
     if (!user) {
+        await db.disconnect(connection);
         return lambdaResponse(404, {
             error: "User not found",
         });
@@ -59,6 +61,9 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     }
     rResp.status = dto.response;
     const savedResponse = await connection!.getRepository(RequestResponse).save(rResp);
+
+    await db.disconnect(connection);
+
     return lambdaResponse(200, {
         id: savedResponse.id,
         status: savedResponse.status,
