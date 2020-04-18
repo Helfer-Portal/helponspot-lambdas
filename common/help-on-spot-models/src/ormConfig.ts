@@ -1,4 +1,4 @@
- export const ormConfig = {
+export const ormConfig = {
   "type": "postgres",
   "host": process.env.DATABASE_HOST,
   "port": 5432,

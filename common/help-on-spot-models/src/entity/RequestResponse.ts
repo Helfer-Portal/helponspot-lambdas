@@ -10,10 +10,10 @@ import {
 import User from "./User";
 import Request from "./Request";
 
-enum Status {
-  Pending,
-  Accepted,
-  Declined
+export enum ResponseRequestStatus {
+  Pending = "pending",
+  Accepted = "accepted",
+  Declined = "declined"
 }
 
 @Entity()
@@ -22,8 +22,8 @@ export default class RequestResponse extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column()
-  status?: Status;
+  @Column({enum: ResponseRequestStatus})
+  status?: ResponseRequestStatus;
 
   @CreateDateColumn()
   createTime?: Date;
@@ -33,8 +33,12 @@ export default class RequestResponse extends BaseEntity {
 
   @ManyToOne(type => User)
   user?: User;
+  @Column()
+  userId?: string;
 
   @ManyToOne(type => Request)
   request?: Request;
+  @Column()
+  requestId?: string;
 
 }
