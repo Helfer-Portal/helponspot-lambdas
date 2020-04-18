@@ -22,8 +22,6 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         },
     });
 
-    responses
-
     await db.disconnect(connection);
 
     return lambdaResponse(200, JSON.stringify(responses));
