@@ -30,8 +30,7 @@ import Organisation from "../../../common/help-on-spot-models/dist/entity/Organi
         endDate: "2004-07-11",
         startDate: "2004-07-12",
         isActive: false,
-        qualifiactionKeys: ["physicallyFit"]
-
+        qualificationKeys: ["physicallyFit"]
     }
     const requestObject: LambdaInputEvent = {
         body: JSON.stringify(requestData),

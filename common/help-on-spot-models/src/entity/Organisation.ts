@@ -6,10 +6,8 @@ import {
     OneToOne,
     JoinColumn,
     ManyToMany,
-    OneToMany,
     CreateDateColumn,
-    UpdateDateColumn,
-    JoinTable
+    UpdateDateColumn, OneToMany
 } from "typeorm";
 import Address from "./Address";
 import User from "./User";
@@ -47,6 +45,8 @@ export default class Organisation extends BaseEntity {
     @ManyToMany(type => User, user => user.organisations, {cascade: true})
     responsibles?: User[];
 
+    @OneToMany(type => Request, request => request.organisation)
+    requests?: Request[]
 
     constructor(organisationData: OrganisationData, responsibles: User[]) {
         super();

@@ -13,7 +13,7 @@ import { Database } from "../../../common/help-on-spot-models/dist/utils/Databas
     const connection = await db.getConnection()
     const userRepo = connection!.getRepository(User)
     const orgRepo = connection!.getRepository(Organisation)
-    
+
     const randomEmail = Math.random().toString(36).substring(7) + "@test"
     const user = await userRepo.save(new User("Test", "User", false, randomEmail, "", []))
     const address: AddressData = { city: "c", country: "c", houseNumber: "h", postalCode: "1", street: "s" }
@@ -33,12 +33,12 @@ import { Database } from "../../../common/help-on-spot-models/dist/utils/Databas
         endDate: "2004-07-11",
         startDate: "2004-07-12",
         isActive: false,
-        qualifiactionKeys: ["physicallyFit"]
+        qualificationKeys: ["physicallyFit"]
 
     }
     const request = await connection!.getRepository(Request).save(new Request(requestData, org, []));
     await connection!.close()
-    
+
 
     {
         const requestObject: LambdaInputEvent = {
@@ -66,5 +66,5 @@ import { Database } from "../../../common/help-on-spot-models/dist/utils/Databas
             }
         };
         const result = await handler(requestObject)
-    }    
+    }
 })()

@@ -52,7 +52,7 @@ export default class Request extends BaseEntity {
   @JoinTable({name: 'join_request_qualification'})
   qualifications?: Qualification[];
 
-  @ManyToOne(type => Organisation)
+  @ManyToOne(type => Organisation, organisation => organisation.requests)
   organisation?: Organisation;
 
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.request)
