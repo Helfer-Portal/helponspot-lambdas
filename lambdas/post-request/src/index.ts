@@ -21,7 +21,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     const connection = await db.getConnection();
     try {
         const organisation: Organisation | undefined = await findOrganisation(event, connection!)
-        const qualifications: Qualification[] | undefined = await findQualifications(requestData.qualifiactionKeys, connection!)
+        const qualifications: Qualification[] | undefined = await findQualifications(requestData.qualificationKeys, connection!)
         const request = new Request(requestData, organisation, qualifications)
         const savedRequest = await connection!.getRepository(Request).save(request)
         return lambdaResponse(200, JSON.stringify(savedRequest))

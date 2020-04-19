@@ -14,7 +14,7 @@ import RequestResponse, { ResponseRequestStatus } from '../../../common/help-on-
     const connection = await db.getConnection()
     const userRepo = connection!.getRepository(User)
     const orgRepo = connection!.getRepository(Organisation)
-    
+
     const randomEmail = Math.random().toString(36).substring(7) + "@test"
     const user = await userRepo.save(new User("Test", "User", false, randomEmail, "", []))
     const address: AddressData = { city: "c", country: "c", houseNumber: "h", postalCode: "1", street: "s" }
@@ -34,7 +34,7 @@ import RequestResponse, { ResponseRequestStatus } from '../../../common/help-on-
         endDate: "2004-07-11",
         startDate: "2004-07-12",
         isActive: false,
-        qualifiactionKeys: ["physicallyFit"]
+        qualificationKeys: ["physicallyFit"]
 
     }
     const request = await connection!.getRepository(Request).save(new Request(requestData, org, []));
@@ -46,7 +46,7 @@ import RequestResponse, { ResponseRequestStatus } from '../../../common/help-on-
 
     await connection!.close()
 
-    
+
     const result = await handler({
         body: "",
         path: `/requests/${request.id}/volunteers`,
@@ -58,6 +58,6 @@ import RequestResponse, { ResponseRequestStatus } from '../../../common/help-on-
         }
     })
     console.log(result);
-    
+
 
 })()

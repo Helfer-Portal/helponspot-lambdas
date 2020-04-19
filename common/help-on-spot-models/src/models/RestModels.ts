@@ -24,7 +24,7 @@ export interface RequestData {
     startDate: string
     endDate: string
     address: AddressData
-    qualifiactionKeys: string[]
+    qualificationKeys: string[]
 }
 
 export interface UserData {

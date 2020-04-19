@@ -30,7 +30,7 @@ import Request from "../../../common/help-on-spot-models/dist/entity/Request";
         endDate: "2004-07-11",
         startDate: "2004-07-12",
         isActive: false,
-        qualifiactionKeys: ["physicallyFit"]
+        qualificationKeys: ["physicallyFit"]
 
     }
     const request = new Request(requestData, organisation, [])
