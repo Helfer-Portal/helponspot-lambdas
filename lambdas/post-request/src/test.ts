@@ -23,14 +23,14 @@ import Organisation from "../../../common/help-on-spot-models/dist/entity/Organi
             street: "string",
             postalCode: "string",
             houseNumber: "string",
-            city: "string",
+            city: "myCity",
             country: "string"
         },
         description: "desc",
         endDate: "2004-07-11",
         startDate: "2004-07-12",
         isActive: false,
-        qualificationKeys: ["physicallyFit"]
+        qualificationKeys: ["medicalEducation"]
     }
     const requestObject: LambdaInputEvent = {
         body: JSON.stringify(requestData),
