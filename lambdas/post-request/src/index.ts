@@ -18,8 +18,8 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     const requestData: RequestData = JSON.parse(event.body)
 
     const db = new Database();
+    const connection = await db.getConnection();
     try {
-        const connection = await db.connect();
         const organisation: Organisation | undefined = await findOrganisation(event, connection!)
         const qualifications: Qualification[] | undefined = await findQualifications(requestData.qualifiactionKeys, connection!)
         const request = new Request(requestData, organisation, qualifications)
@@ -29,7 +29,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         console.log(`Error during lambda execution:\n ${e}`)
         return lambdaResponse(500, JSON.stringify(e))
     } finally {
-        await db.disconnect()
+        await db.disconnect(connection)
     }
 }
 

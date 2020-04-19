@@ -6,7 +6,7 @@ import {User} from "../../../common/help-on-spot-models/dist";
 import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
 (async function () {
 
-    const connection = await new Database().connect()
+    const connection = await new Database().getConnection()
     const userRepo = connection!.getRepository(User)
     const orgRepo = connection!.getRepository(Organisation)
 
