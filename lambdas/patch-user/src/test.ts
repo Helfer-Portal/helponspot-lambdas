@@ -1,7 +1,17 @@
 import {  handler, LambdaInputEvent } from './index'
+import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
+import {User} from "../../../common/help-on-spot-models/dist";
 
 (async function () {
-  const user = {
+
+  const connection = await new Database().getConnection();
+  const userRepo = connection.getRepository(User);
+
+  const randomEmail = Math.random().toString(36).substring(7) + "@test";
+  const user = await userRepo.save(new User("Test", "User", false, randomEmail, "", []));
+  await connection.close();
+
+  const patchUser = {
     firstName: "Max neu",
     lastName: "Mustermann neu",
     isGPSLocationAllowed: true,
@@ -20,9 +30,9 @@ import {  handler, LambdaInputEvent } from './index'
     ]
   }
   const requestObject: LambdaInputEvent = {
-    body: JSON.stringify(user),
+    body: JSON.stringify(patchUser),
     pathParameters: {
-      userId: "C898EF75-AC18-4197-BA4D-E384D727A7C0"
+      userId: user.id
     }
   }
   const result = await handler(requestObject)

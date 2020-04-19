@@ -73,7 +73,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     const savedUser: User = await userRepository.save(user);
     return lambdaResponse(200, JSON.stringify(savedUser));
   } catch (e) {
-    console.log(`Error during lambda execution: ${JSON.stringify(e)}`)
+    console.log(`Error during lambda execution: ${JSON.stringify(e)}`);
     return lambdaResponse(500, JSON.stringify(e));
   }
   finally {
