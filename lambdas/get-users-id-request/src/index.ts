@@ -1,7 +1,4 @@
 import {Qualification, User} from "../../../common/help-on-spot-models/dist";
-
-require('dotenv').config();
-
 import Request from "../../../common/help-on-spot-models/dist/entity/Request";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
@@ -15,18 +12,24 @@ export interface LambdaInputEvent {
     }
 }
 
-function matchesUserQuals(request: Request, requestedQualifications: Qualification[]): boolean {
-    const userKeys = requestedQualifications.map(r => r.key)
-
+/* TODO: this should probably be done as part of the DB query. But since this will change anyway once we change to
+* actual locations I guess it is good enough atm.
+*/
+function matchesUserQualifications(request: Request, userQualifications: Qualification[] | undefined): boolean {
+    if (!request.qualifications || request.qualifications.length === 0) {
+        return true
+    }
+    const userKeys = userQualifications!.map(r => r.key)
     return request.qualifications!.every(rq => userKeys.includes(rq.key))
 }
 
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
-    const userId = event.pathParameters.userId;
     const db = new Database();
     const connection = await db.getConnection();
+    const userId = event.pathParameters.userId;
+
     try {
-        console.log('looking for ' + userId)
+        console.log(`Trying to find suitable Requests for user ${userId}`)
         const user = await connection.getRepository(User).findOne({
             where: {id: userId},
             relations: ['qualifications', 'address']
@@ -34,26 +37,25 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         if (!user) {
             return lambdaResponse(400, 'Give User does not exist')
         }
-        const requestedQualifications: Qualification[]  = user.qualifications!
+
+        const userQualifications: Qualification[] = user.qualifications!
         const requestedCity = user.address!.city
 
         const requestRepository = connection.getRepository(Request)
-        const matchedRequests = await requestRepository.createQueryBuilder("request")
+        const locationMatchedRequests = await requestRepository.createQueryBuilder("request")
             .leftJoinAndSelect("request.address", "address")
             .leftJoinAndSelect("request.qualifications", "qualifications")
             .where("address.city = :city", {city: requestedCity})
             .getMany()
+        console.log('Found ' + locationMatchedRequests.length + " location matches")
 
-        console.log('Found ' + matchedRequests.length + " matches")
-        const fileterd = matchedRequests.filter(request => matchesUserQuals(request, requestedQualifications))
-        console.log(`Remain ${fileterd.length}`)
-        console.log(`Remain ${JSON.stringify(fileterd, null, 2)}`)
-        // const user: User | undefined = await requestRepository.findOne({ where: { id: userId }, relations: ['address', 'qualifications'] });
+        const qualificationMatchedRequests = locationMatchedRequests.filter(request => matchesUserQualifications(request, userQualifications))
+        console.log('Found ' + qualificationMatchedRequests.length + " location+qualification matches")
 
-        if (!matchedRequests) {
+        if (!locationMatchedRequests) {
             return lambdaResponse(404, "No Requests match the given query");
         }
-        return lambdaResponse(200, fileterd);
+        return lambdaResponse(200, qualificationMatchedRequests);
     } catch (e) {
         console.log(`Error during lambda execution: ${e}`)
         return lambdaResponse(500, JSON.stringify(e));
