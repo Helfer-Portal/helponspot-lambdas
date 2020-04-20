@@ -12,19 +12,22 @@ export interface LambdaInputEvent {
 export const handler = async (event?: LambdaInputEvent): Promise<LambdaResponse> => {
     const database = new Database();
     const connection = await database.getConnection();
-    let organisations: Organisation[] | undefined
+    let result: Organisation[] | Organisation | undefined
     try {
         if (event?.pathParameters?.organisationId) {
-            organisations = await connection.getRepository(Organisation).find({
+            result = await connection.getRepository(Organisation).findOne({
                 where: {id: event.pathParameters.organisationId},
                 relations: ['responsibles', 'address']
             })
+            if(result) {
+                console.log('Found one organisation')
+            }
         } else {
-            organisations = await connection.getRepository(Organisation).find({relations: ['responsibles', 'address']})
+            result = await connection.getRepository(Organisation).find({relations: ['responsibles', 'address']})
+            console.log(`Found '${result!.length}' organisations`)
         }
-        console.log(`Found ${organisations!.length} organisations`)
-        if (organisations) {
-            return lambdaResponse(200, organisations)
+        if (result) {
+            return lambdaResponse(200, result)
         } else {
             return lambdaResponse(404, `No organisations found`)
         }
