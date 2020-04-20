@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-projectName=get-users-id-requests
+projectName=get-users-id-request
 
 npm prune
 npm i
