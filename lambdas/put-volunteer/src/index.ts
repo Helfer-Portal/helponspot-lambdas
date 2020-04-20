@@ -1,8 +1,6 @@
 import { LambdaResponse, lambdaResponse } from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
-import { RequestData } from "../../../common/help-on-spot-models/dist/models/RestModels";
 import { Database } from "../../../common/help-on-spot-models/dist/utils/Database";
-import { Connection, In, Qualification, User } from "../../../common/help-on-spot-models/dist/index";
-import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
+import { User } from "../../../common/help-on-spot-models/dist/index";
 import Request from "../../../common/help-on-spot-models/dist/entity/Request";
 import RequestResponse, { ResponseRequestStatus } from "../../../common/help-on-spot-models/dist/entity/RequestResponse";
 
@@ -18,7 +16,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
     const dto = JSON.parse(event.body)
 
-    if (dto?.response === undefined || dto?.response === undefined) {
+    if (dto?.response === undefined) {
         return lambdaResponse(400, {
             error: "'response' missing"
         })
