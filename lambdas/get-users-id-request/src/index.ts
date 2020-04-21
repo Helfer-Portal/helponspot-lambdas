@@ -19,8 +19,8 @@ function matchesUserQualifications(request: Request, userQualifications: Qualifi
     if (!request.qualifications || request.qualifications.length === 0) {
         return true
     }
-    const userKeys = userQualifications!.map(r => r.key)
-    return request.qualifications!.every(rq => userKeys.includes(rq.key))
+    const userQualificationKeys = userQualifications!.map(qualification => qualification.key)
+    return request.qualifications!.every(request => userQualificationKeys.includes(request.key))
 }
 
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
@@ -35,7 +35,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
             relations: ['qualifications', 'address']
         })
         if (!user) {
-            return lambdaResponse(400, 'Give User does not exist')
+            return lambdaResponse(400, 'Given User does not exist')
         }
 
         const userQualifications: Qualification[] = user.qualifications!
