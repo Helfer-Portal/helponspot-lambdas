@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-#TODO: get-volunteers lambda has not been created yet
-lambdas=(get-organisation-requests get-organisations get-qualifications get-request-id get-user get-users-id-request patch-user post-organisation post-request post-user put-volunteer)
+lambdas=(get-organisation-requests get-organisations get-qualifications get-request-id get-user get-users-id-request get-volunteers patch-user post-organisation post-request post-user put-volunteer)
 deploymentStage='dev'
 
 selectedLambdas=()
