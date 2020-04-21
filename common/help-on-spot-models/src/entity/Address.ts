@@ -1,4 +1,4 @@
-import {BaseEntity, Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {BaseEntity, Entity, PrimaryGeneratedColumn, Column, Index} from "typeorm";
 import {AddressData} from "../models/RestModels";
 
 @Entity()
@@ -22,10 +22,18 @@ export default class Address extends BaseEntity {
   @Column()
   country?: string;
 
+  @Column("geometry", {
+    nullable: true
+  })
+  @Index({
+    spatial: true
+  })
+  geom?: object;
+
   constructor(addressData: AddressData) {
       super();
       if (addressData) {
-      this.street = addressData.street
+          this.street = addressData.street
           this.houseNumber = addressData.houseNumber
           this.postalCode = addressData.postalCode
           this.city = addressData.city

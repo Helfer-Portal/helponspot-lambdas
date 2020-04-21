@@ -4,6 +4,7 @@ import {AddressData} from "../../../common/help-on-spot-models/dist/models/RestM
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import {Address, Connection, Qualification, User, In, Repository} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
+import { Lambda } from "aws-sdk";
 
 
 export interface LambdaInputEvent {
@@ -59,8 +60,8 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
   if (userData.address) {
     user.address = new Address(userData.address);
+    user.address.geom = await getPointFromGeoservice(userData.address);
   }
-
 
   try {
     const savedUser: User = await userRepository.save(user);
@@ -86,4 +87,21 @@ async function findEmail(email: string, userRepository: Repository<User>): Promi
   return userRepository.findOne({
     where: { email: email }
   });
+}
+
+async function getPointFromGeoservice(address: AddressData): Promise<object> {
+  const lambda = new Lambda();
+  const params = {
+    FunctionName: "HoS-geolocation-dev",
+    Payload: address,
+  };
+  lambda.invoke(params, function(err, data) {
+    if (err){
+      console.log(err, err.stack);
+    } else {
+      console.log(data);
+      return data;
+    }
+  });
+
 }
