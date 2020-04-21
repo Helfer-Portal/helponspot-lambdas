@@ -25,10 +25,7 @@ export default class Address extends BaseEntity {
   @Column("geometry", {
     nullable: true
   })
-  @Index({
-    spatial: true
-  })
-  geom?: object;
+  point?: object;
 
   constructor(addressData: AddressData) {
       super();

@@ -60,7 +60,11 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
   if (userData.address) {
     user.address = new Address(userData.address);
-    user.address.geom = await getPointFromGeoservice(userData.address);
+    //user.address.geom = await getPointFromGeoservice(userData.address);
+    user.address.point = {
+      type: "Point",
+      coordinates: [48.135124, 11.581981]
+    };
   }
 
   try {
@@ -89,19 +93,21 @@ async function findEmail(email: string, userRepository: Repository<User>): Promi
   });
 }
 
-async function getPointFromGeoservice(address: AddressData): Promise<object> {
+async function getPointFromGeoservice(address: AddressData): Promise<object | undefined> {
   const lambda = new Lambda();
   const params = {
     FunctionName: "HoS-geolocation-dev",
     Payload: address,
   };
+  let test;
   lambda.invoke(params, function(err, data) {
     if (err){
       console.log(err, err.stack);
     } else {
       console.log(data);
-      return data;
+      test = data;
     }
   });
 
+  return test;
 }
