@@ -1,5 +1,7 @@
+
 require('dotenv').config();
 
+import {getPointFromGeoservice} from "../../../common/help-on-spot-models/dist/utils/getGeolocation";
 import {UserData} from "../../../common/help-on-spot-models/src/models/RestModels";
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import {Address, Connection, Qualification, User, In} from "../../../common/help-on-spot-models/dist";
@@ -66,6 +68,10 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
       user.address = oldAddress;
     } else {
       user.address = new Address(userPatchData.address);
+    }
+    user.address!.point = {
+      type: "Point",
+      coordinates: await getPointFromGeoservice(userPatchData.address)
     }
   }
 

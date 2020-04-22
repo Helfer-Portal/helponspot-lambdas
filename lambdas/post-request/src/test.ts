@@ -20,11 +20,11 @@ import Organisation from "../../../common/help-on-spot-models/dist/entity/Organi
     const requestData: RequestData = {
         title: "huhu",
         address: {
-            street: "string",
-            postalCode: "string",
-            houseNumber: "string",
-            city: "string",
-            country: "string"
+            street: "Ollenhauerstraße",
+            postalCode: "81737",
+            houseNumber: "49",
+            city: "München",
+            country: "Deutschland"
         },
         description: "desc",
         endDate: "2004-07-11",

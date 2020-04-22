@@ -1,4 +1,4 @@
-import {BaseEntity, Entity, PrimaryGeneratedColumn, Column, Index} from "typeorm";
+import {BaseEntity, Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 import {AddressData} from "../models/RestModels";
 
 @Entity()

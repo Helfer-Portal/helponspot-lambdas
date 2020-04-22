@@ -4,7 +4,7 @@ import {AddressData} from "../../../common/help-on-spot-models/dist/models/RestM
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import {Address, Connection, Qualification, User, In, Repository} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
-import { Lambda } from "aws-sdk";
+import {getPointFromGeoservice} from "../../../common/help-on-spot-models/dist/utils/getGeolocation";
 
 
 export interface LambdaInputEvent {
@@ -58,16 +58,14 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     qualifications
   );
 
-  if (userData.address) {
-    user.address = new Address(userData.address);
-    //user.address.geom = await getPointFromGeoservice(userData.address);
-    user.address.point = {
-      type: "Point",
-      coordinates: [48.135124, 11.581981]
-    };
-  }
-
   try {
+    if (userData.address) {
+      user.address = new Address(userData.address);
+      user.address.point = {
+        type: "Point",
+        coordinates: await getPointFromGeoservice(userData.address)
+      };
+    }
     const savedUser: User = await userRepository.save(user);
     return lambdaResponse(200, JSON.stringify(savedUser));
   } catch (e) {
@@ -91,23 +89,4 @@ async function findEmail(email: string, userRepository: Repository<User>): Promi
   return userRepository.findOne({
     where: { email: email }
   });
-}
-
-async function getPointFromGeoservice(address: AddressData): Promise<object | undefined> {
-  const lambda = new Lambda();
-  const params = {
-    FunctionName: "HoS-geolocation-dev",
-    Payload: address,
-  };
-  let test;
-  lambda.invoke(params, function(err, data) {
-    if (err){
-      console.log(err, err.stack);
-    } else {
-      console.log(data);
-      test = data;
-    }
-  });
-
-  return test;
 }

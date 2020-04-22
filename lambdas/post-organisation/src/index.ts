@@ -1,3 +1,5 @@
+import {getPointFromGeoservice} from "../../../common/help-on-spot-models/dist/utils/getGeolocation";
+
 require('dotenv').config();
 
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
@@ -25,6 +27,10 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         const users: User[] = await userRepository.createQueryBuilder("user").where("user.id IN (:...res)", { res: organisationData.responsibles }).getMany()
         console.log(`Found ${users.length} valid users of ${organisationData.responsibles.length} requested`)
         const organisation = new Organisation(organisationData, users)
+        organisation.address!.point =  {
+            type: "Point",
+            coordinates: await getPointFromGeoservice(organisationData.address)
+        };
         let persistedOrganisation: Organisation = await connection.manager.save(organisation)
         console.log(`Persisted new Organisation: ${JSON.stringify(persistedOrganisation)}`)
         return lambdaResponse(200, JSON.stringify(persistedOrganisation));

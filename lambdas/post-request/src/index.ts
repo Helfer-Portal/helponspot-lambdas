@@ -1,3 +1,5 @@
+import {getPointFromGeoservice} from "../../../common/help-on-spot-models/dist/utils/getGeolocation";
+
 require('dotenv').config();
 
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
@@ -23,6 +25,10 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         const organisation: Organisation | undefined = await findOrganisation(event, connection!)
         const qualifications: Qualification[] | undefined = await findQualifications(requestData.qualificationKeys, connection!)
         const request = new Request(requestData, organisation, qualifications)
+        request.address!.point = {
+            type: "Point",
+            coordinates: await getPointFromGeoservice(requestData.address)
+        }
         const savedRequest = await connection!.getRepository(Request).save(request)
         return lambdaResponse(200, JSON.stringify(savedRequest))
     } catch (e) {
