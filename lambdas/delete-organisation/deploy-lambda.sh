@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-projectName=get-request-id
+projectName=delete-organisation
 
-npm i
 npm run build
 cd ../../
 

@@ -16,7 +16,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
     const dto = JSON.parse(event.body)
 
-    if (dto?.response === undefined || dto?.response === undefined) {
+    if (dto?.response === undefined) {
         return lambdaResponse(400, {
             error: "'response' missing"
         })

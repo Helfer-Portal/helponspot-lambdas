@@ -4,3 +4,4 @@ dist
 node_modules
 .env
 /common/help-on-spot-models/tsconfig.tsbuildinfo
+.DS_Store
