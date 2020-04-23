@@ -1,3 +1,4 @@
+import {convertEntityToResponseModel} from "../../../common/help-on-spot-models/dist/models/ApiResponseModels";
 
 require('dotenv').config();
 
@@ -69,15 +70,22 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     } else {
       user.address = new Address(userPatchData.address);
     }
-    user.address!.point = {
-      type: "Point",
-      coordinates: await getPointFromGeoservice(userPatchData.address)
+    try {
+      user.address!.point = {
+        type: "Point",
+        coordinates: await getPointFromGeoservice(userPatchData.address)
+      }
+    } catch (e) {
+      console.log(`Error during lambda execution: ${e.message}`)
+      return lambdaResponse(400, { message: e.message });
+    } finally {
+      await db.disconnect(connection)
     }
   }
 
   try {
     const savedUser: User = await userRepository.save(user);
-    return lambdaResponse(200, JSON.stringify(savedUser));
+    return lambdaResponse(200, JSON.stringify(convertEntityToResponseModel(savedUser)));
   } catch (e) {
     console.log(`Error during lambda execution: ${JSON.stringify(e)}`);
     return lambdaResponse(500, JSON.stringify(e));
@@ -89,7 +97,6 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
 async function findQualifications(qualifications: string[], connection: Connection): Promise<Qualification[]> {
   const qualificationRepository = connection.getRepository(Qualification);
-
   return qualificationRepository.find({
     key: In(qualifications)
   });
@@ -97,6 +104,5 @@ async function findQualifications(qualifications: string[], connection: Connecti
 
 async function findAddress(addressId: string, connection: Connection): Promise<Address | undefined> {
   const addressRepository = connection.getRepository(Address);
-
   return addressRepository.findOne({ where: { id: addressId } } );
 }

@@ -7,6 +7,7 @@ import {OrganisationData} from "../../../common/help-on-spot-models/src/models/R
 import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
 import {User} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
+import {convertEntityToResponseModel} from "../../../common/help-on-spot-models/dist/models/ApiResponseModels";
 
 export interface LambdaInputEvent {
     body: string
@@ -33,7 +34,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         };
         let persistedOrganisation: Organisation = await connection.manager.save(organisation)
         console.log(`Persisted new Organisation: ${JSON.stringify(persistedOrganisation)}`)
-        return lambdaResponse(200, JSON.stringify(persistedOrganisation));
+        return lambdaResponse(200, JSON.stringify(convertEntityToResponseModel(persistedOrganisation)));
     } catch (e) {
         console.log(`Error during lambda execution:\n ${JSON.stringify(e)}`)
         return lambdaResponse(500, JSON.stringify(e));

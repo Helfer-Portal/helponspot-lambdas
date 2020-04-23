@@ -8,6 +8,7 @@ import {Database} from "../../../common/help-on-spot-models/dist/utils/Database"
 import {Connection, In, Qualification} from "../../../common/help-on-spot-models/dist/index";
 import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
 import Request from "../../../common/help-on-spot-models/dist/entity/Request";
+import {convertEntityToResponseModel} from "../../../common/help-on-spot-models/dist/models/ApiResponseModels";
 
 export interface LambdaInputEvent {
     body: string
@@ -29,7 +30,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
             type: "Point",
             coordinates: await getPointFromGeoservice(requestData.address)
         }
-        const savedRequest = await connection!.getRepository(Request).save(request)
+        const savedRequest = await connection!.getRepository(Request).save(convertEntityToResponseModel(request))
         return lambdaResponse(200, JSON.stringify(savedRequest))
     } catch (e) {
         console.log(`Error during lambda execution:\n ${e}`)

@@ -2,9 +2,8 @@ import {AddressData} from "../models/RestModels";
 import {Config} from "aws-sdk";
 import Lambda from "aws-sdk/clients/lambda";
 
-require('dotenv').config();
-
 export async function getPointFromGeoservice(address: AddressData): Promise<number[]> {
+  // credentials are only needed for local setup
   const awsConfig = new Config({
     accessKeyId: process.env.AWS_ACCESS_KEY,
     secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -12,7 +11,7 @@ export async function getPointFromGeoservice(address: AddressData): Promise<numb
   })
   const lambda = new Lambda(awsConfig);
   const params = {
-    FunctionName: 'HoS-geolocation-dev',
+    FunctionName: process.env.GEOSERVICE_LAMBDA_NAME as string,
     InvocationType: 'RequestResponse',
     Payload: JSON.stringify({ "body": JSON.stringify(address) }),
   };
@@ -20,11 +19,11 @@ export async function getPointFromGeoservice(address: AddressData): Promise<numb
   const data = await lambda.invoke(params).promise();
   const geoserviceResponse = JSON.parse(data.Payload as string);
   const geoserviceResponseBody = JSON.parse(geoserviceResponse.body);
+  if (!geoserviceResponseBody.lat) {
+    throw Error("Location for address not found!");
+  }
   latlngData = [geoserviceResponseBody.lat, geoserviceResponseBody.lng];
   console.log(latlngData);
 
-  if (latlngData.length === 0) {
-    throw Error("Geoservice data could not be fetched!");
-  }
   return latlngData;
 }
