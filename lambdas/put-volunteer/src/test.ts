@@ -1,3 +1,4 @@
+require('dotenv').config()
 import { handler, LambdaInputEvent } from './index'
 import { AddressData, OrganisationData, RequestData } from '../../../common/help-on-spot-models/src/models/RestModels'
 

@@ -6,11 +6,11 @@ export function convertEntityToResponseModel(entity: User | Organisation | Reque
     return {
         ...entity,
         address: {
-            country: entity.address?.country,
-            city: entity.address?.city,
-            postalCode: entity.address?.postalCode,
-            street: entity.address?.street,
-            houseNumber: entity.address?.houseNumber,
+            country: entity.address!.country,
+            city: entity.address!.city,
+            postalCode: entity.address!.postalCode,
+            street: entity.address!.street,
+            houseNumber: entity.address!.houseNumber,
             location: {
                 latitude: entity.address!.point!.coordinates[0],
                 longitude: entity.address!.point!.coordinates[1]
