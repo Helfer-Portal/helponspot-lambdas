@@ -78,7 +78,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     } else {
       user.address = new Address(userPatchData.address);
     }
-    user.address.point = {
+    user!.address!.point = {
       type: "Point",
       coordinates
     }
