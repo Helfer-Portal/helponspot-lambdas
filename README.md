@@ -26,8 +26,9 @@ This repo contains all aws lambda functions, plus a commons library.
 
 * You can then login with user "docker", password "docker" and databasename "gis"
 
-### Local .env variables
+### Local environment variables
 * Create a local .env file in the root directory of each lambda  
+
 Available .env variables:
 ```
 DATABASE_HOST=
@@ -36,8 +37,8 @@ DATABASE_PASSWORD=
 DATABASE_NAME=
 AWS_ACCESS_KEY=
 AWS_SECRET_KEY=
-GEOSERVICE_LAMBDA_NAME=
 AWS_REGION=
+GEOSERVICE_LAMBDA_NAME=
 ```
 
 ## Deploy lambdas to AWS
@@ -57,9 +58,11 @@ AWS_REGION=
 * point API gateway's endpoint 'Integration Request' to new lambda
 * assign correct input/output models or create them if they don't exist yet
 * if changes have been made to the API, export OpenAPI docs and commit them to `Helfer-Portal/helponspot-api-gateway` repo
-* if your lambda uses geolocation service, you need to give the lambda role of your service the `InvokeGeoLocationLambda` policy
+* if your lambda uses the geolocation service, you need to:
+  * give the lambda role of your service the `InvokeGeoLocationLambda` policy
+  * give the lambda the `GEOSERVIE_LAMBDA_NAME` env variable
 
 ## RDS Postgres DB
 * The application is using an AWS RDS instance with postgres version 10.11
 * If you need to enable the PostGIS extension on the db you need to execute `create extension postgis;` for enabling the extension
-  * You need the PostGIS extension to save spatial data like "point" of address 
+  * You need the PostGIS extension for saving spatial data like "point" of address 

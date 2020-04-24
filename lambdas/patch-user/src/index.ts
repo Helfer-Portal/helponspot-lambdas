@@ -59,6 +59,14 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   }
 
   if (userPatchData.address) {
+    let coordinates
+    try {
+      coordinates = await getPointFromGeoservice(userPatchData.address)
+    } catch (e) {
+      console.log(`Error during lambda execution: ${e.message}`)
+      await db.disconnect(connection);
+      return lambdaResponse(400, { message: e.message });
+    }
     if (user.address && user.address.id) {
       const oldAddress = await findAddress(user.address.id, connection);
       oldAddress!.city = userPatchData.address.city;
@@ -70,16 +78,9 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     } else {
       user.address = new Address(userPatchData.address);
     }
-    try {
-      user.address!.point = {
-        type: "Point",
-        coordinates: await getPointFromGeoservice(userPatchData.address)
-      }
-    } catch (e) {
-      console.log(`Error during lambda execution: ${e.message}`)
-      return lambdaResponse(400, { message: e.message });
-    } finally {
-      await db.disconnect(connection)
+    user.address.point = {
+      type: "Point",
+      coordinates
     }
   }
 

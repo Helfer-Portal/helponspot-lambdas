@@ -22,13 +22,22 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
     const db = new Database();
     const connection = await db.getConnection();
+
+    let coordinates;
+    try {
+        coordinates = await getPointFromGeoservice(requestData.address);
+    } catch (e) {
+        console.log(`Error during lambda execution: ${e.message}`)
+        return lambdaResponse(400, { message: e.message });
+    }
+
     try {
         const organisation: Organisation | undefined = await findOrganisation(event, connection!)
         const qualifications: Qualification[] | undefined = await findQualifications(requestData.qualificationKeys, connection!)
         const request = new Request(requestData, organisation, qualifications)
         request.address!.point = {
             type: "Point",
-            coordinates: await getPointFromGeoservice(requestData.address)
+            coordinates
         }
         const savedRequest = await connection!.getRepository(Request).save(convertEntityToResponseModel(request))
         return lambdaResponse(200, JSON.stringify(savedRequest))

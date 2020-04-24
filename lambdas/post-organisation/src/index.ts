@@ -1,7 +1,6 @@
-import {getPointFromGeoservice} from "../../../common/help-on-spot-models/dist/utils/getGeolocation";
-
 require('dotenv').config();
 
+import {getPointFromGeoservice} from "../../../common/help-on-spot-models/dist/utils/getGeolocation";
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import {OrganisationData} from "../../../common/help-on-spot-models/src/models/RestModels";
 import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
@@ -23,6 +22,15 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         return lambdaResponse(500, 'No Database connection');
     }
 
+    let coordinates;
+    try {
+        coordinates = await getPointFromGeoservice(organisationData.address)
+    } catch (e) {
+        await db.disconnect(connection);
+        console.log(`Error during lambda execution: ${e.message}`)
+        return lambdaResponse(400, { message: e.message });
+    }
+
     try {
         const userRepository = connection.getRepository(User)
         const users: User[] = await userRepository.createQueryBuilder("user").where("user.id IN (:...res)", { res: organisationData.responsibles }).getMany()
@@ -30,7 +38,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         const organisation = new Organisation(organisationData, users)
         organisation.address!.point =  {
             type: "Point",
-            coordinates: await getPointFromGeoservice(organisationData.address)
+            coordinates
         };
         let persistedOrganisation: Organisation = await connection.manager.save(organisation)
         console.log(`Persisted new Organisation: ${JSON.stringify(persistedOrganisation)}`)
