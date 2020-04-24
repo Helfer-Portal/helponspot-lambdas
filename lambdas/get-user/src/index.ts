@@ -13,7 +13,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   const connection = await db.getConnection();
   try {
       const repo = connection.getRepository(User);
-      const user: User | undefined = await repo.findOne({ where: { id: userId }, relations: ['address', 'qualifications'] });
+      const user: User | undefined = await repo.findOne({ where: { id: userId }, relations: ['address', 'qualifications', 'organisations'] });
       if (!user) {
         return lambdaResponse(404, "User not found!");
       }
