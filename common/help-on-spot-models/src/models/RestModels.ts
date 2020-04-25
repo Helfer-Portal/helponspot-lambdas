@@ -33,6 +33,7 @@ export interface UserData {
     isGPSLocationAllowed: boolean;
     email: string;
     avatar: string;
+    travellingDistance: number;
     qualifications: string[];
     address: AddressData
 }

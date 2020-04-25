@@ -2,7 +2,7 @@ import {convertEntityToResponseModel} from "../../../common/help-on-spot-models/
 
 require('dotenv').config();
 
-import {AddressData} from "../../../common/help-on-spot-models/dist/models/RestModels";
+import {UserData} from "../../../common/help-on-spot-models/dist/models/RestModels";
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import {Address, Connection, Qualification, User, In, Repository} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
@@ -11,16 +11,6 @@ import {getPointFromGeoservice} from "../../../common/help-on-spot-models/dist/u
 
 export interface LambdaInputEvent {
   body: string
-}
-
-interface UserData {
-  firstName: string;
-  lastName: string;
-  isGPSLocationAllowed: boolean;
-  email: string;
-  avatar: string;
-  qualifications: string[];
-  address: AddressData
 }
 
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
@@ -57,6 +47,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     userData.isGPSLocationAllowed,
     userData.email,
     userData.avatar,
+    userData.travellingDistance,
     qualifications
   );
 

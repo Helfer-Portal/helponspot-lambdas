@@ -34,6 +34,9 @@ export default class User extends BaseEntity {
   @Column({ nullable: true })
   avatar: string;
 
+  @Column({ nullable: true })
+  travellingDistance: number;
+
   @CreateDateColumn()
   createTime?: Date;
 
@@ -55,14 +58,14 @@ export default class User extends BaseEntity {
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.user)
   requestResponses?: RequestResponse[];
 
-  constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, email: string, avatar: string, qualifications: Qualification[]) {
+  constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, email: string, avatar: string, travellingDistance: number, qualifications: Qualification[]) {
     super();
     this.firstName = firstName;
     this.lastName = lastName;
     this.isGPSLocationAllowed = isGPSLocationAllowed;
     this.email = email;
     this.avatar = avatar;
+    this.travellingDistance = travellingDistance;
     this.qualifications = qualifications;
   }
-
 }
