@@ -1,14 +1,14 @@
-import {getPointFromGeoservice} from "../../../common/help-on-spot-models/dist/utils/getGeolocation";
+import { getPointFromGeoservice } from '../../../common/help-on-spot-models/dist/utils/getGeolocation'
 
-require('dotenv').config();
+require('dotenv').config()
 
-import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
-import {RequestData} from "../../../common/help-on-spot-models/dist/models/RestModels";
-import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
-import {Connection, In, Qualification} from "../../../common/help-on-spot-models/dist/index";
-import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
-import Request from "../../../common/help-on-spot-models/dist/entity/Request";
-import {convertEntityToResponseModel} from "../../../common/help-on-spot-models/dist/models/ApiResponseModels";
+import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
+import { RequestData } from '../../../common/help-on-spot-models/dist/models/RestModels'
+import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
+import { Connection, In, Qualification } from '../../../common/help-on-spot-models/dist/index'
+import Organisation from '../../../common/help-on-spot-models/dist/entity/Organisation'
+import Request from '../../../common/help-on-spot-models/dist/entity/Request'
+import { convertEntityToResponseModel } from '../../../common/help-on-spot-models/dist/models/ApiResponseModels'
 
 export interface LambdaInputEvent {
     body: string
@@ -20,23 +20,26 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     console.log(JSON.stringify(event))
     const requestData: RequestData = JSON.parse(event.body)
 
-    const db = new Database();
-    const connection = await db.getConnection();
+    const db = new Database()
+    const connection = await db.getConnection()
 
-    let coordinates;
+    let coordinates
     try {
-        coordinates = await getPointFromGeoservice(requestData.address);
+        coordinates = await getPointFromGeoservice(requestData.address)
     } catch (e) {
         console.log(`Error during lambda execution: ${e.message}`)
-        return lambdaResponse(400, { message: e.message });
+        return lambdaResponse(400, { message: e.message })
     }
 
     try {
         const organisation: Organisation | undefined = await findOrganisation(event, connection!)
-        const qualifications: Qualification[] | undefined = await findQualifications(requestData.qualificationKeys, connection!)
+        const qualifications: Qualification[] | undefined = await findQualifications(
+            requestData.qualificationKeys,
+            connection!
+        )
         const request = new Request(requestData, organisation, qualifications)
         request.address!.point = {
-            type: "Point",
+            type: 'Point',
             coordinates
         }
         const savedRequest = await connection!.getRepository(Request).save(convertEntityToResponseModel(request))
@@ -53,7 +56,7 @@ async function findOrganisation(event: LambdaInputEvent, connection: Connection)
     const organisationId = event.pathParameters.organisationId
     if (organisationId) {
         console.log(`for OrgId: ${organisationId}`)
-        const organisation = await connection.getRepository(Organisation).findOne({id: organisationId})
+        const organisation = await connection.getRepository(Organisation).findOne({ id: organisationId })
         if (!organisation) {
             throw Error(`Could not find Organisation for id ${organisationId}`)
         }
@@ -67,11 +70,10 @@ async function findOrganisation(event: LambdaInputEvent, connection: Connection)
 
 async function findQualifications(qualifiactionKeys: string[], connection: Connection) {
     if (qualifiactionKeys && qualifiactionKeys.length > 0) {
-        const qualificaitons = await connection.getRepository(Qualification).find({key: In(qualifiactionKeys)})
+        const qualificaitons = await connection.getRepository(Qualification).find({ key: In(qualifiactionKeys) })
         console.log(`Found '${qualificaitons.length}' qualifications for '${qualifiactionKeys.length}' key`)
         return qualificaitons
-    }
-    else {
+    } else {
         return undefined
     }
 }
