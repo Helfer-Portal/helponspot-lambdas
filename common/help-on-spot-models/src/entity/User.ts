@@ -1,76 +1,71 @@
 import {
-    BaseEntity,
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    OneToOne,
-    JoinColumn,
-    ManyToMany,
-    OneToMany,
-    CreateDateColumn,
-    UpdateDateColumn,
-    JoinTable
-} from 'typeorm'
-import Address from './Address'
-import Qualification from './Qualification'
-import Organisation from './Organisation'
-import RequestResponse from './RequestResponse'
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  ManyToMany,
+  OneToMany, CreateDateColumn, UpdateDateColumn, JoinTable
+} from "typeorm";
+import Address from "./Address";
+import Qualification from "./Qualification";
+import Organisation from "./Organisation";
+import RequestResponse from "./RequestResponse";
 
 @Entity()
 export default class User extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id?: string
 
-    @Column()
-    firstName: string
+  @PrimaryGeneratedColumn('uuid')
+  id?: string;
 
-    @Column()
-    lastName: string
+  @Column()
+  firstName: string;
 
-    @Column()
-    isGPSLocationAllowed: boolean
+  @Column()
+  lastName: string;
 
-    @Column({ unique: true })
-    email: string
+  @Column()
+  isGPSLocationAllowed: boolean;
 
-    @Column({ nullable: true })
-    avatar: string
+  @Column({ unique: true })
+  email: string;
 
-    @CreateDateColumn()
-    createTime?: Date
+  @Column({ nullable: true })
+  avatar: string;
 
-    @UpdateDateColumn()
-    updateTime?: Date
+  @Column({ nullable: true })
+  travellingDistance: number;
 
-    @OneToOne((type) => Address, { cascade: true })
-    @JoinColumn({ name: 'join_user_address' })
-    address?: Address
+  @CreateDateColumn()
+  createTime?: Date;
 
-    @ManyToMany((type) => Qualification, (qualification) => qualification.users)
-    @JoinTable({ name: 'join_user_qualification' })
-    qualifications?: Qualification[]
+  @UpdateDateColumn()
+  updateTime?: Date;
 
-    @ManyToMany((type) => Organisation, (organisation) => organisation.responsibles)
-    @JoinTable({ name: 'join_user_organisation' })
-    organisations?: Organisation[]
+  @OneToOne(type => Address, { cascade: true })
+  @JoinColumn({name: 'join_user_address'})
+  address?: Address;
 
-    @OneToMany((type) => RequestResponse, (requestResponse) => requestResponse.user)
-    requestResponses?: RequestResponse[]
+  @ManyToMany(type => Qualification, qualification => qualification.users)
+  @JoinTable({name: 'join_user_qualification'})
+  qualifications?: Qualification[];
 
-    constructor(
-        firstName: string,
-        lastName: string,
-        isGPSLocationAllowed: boolean,
-        email: string,
-        avatar: string,
-        qualifications: Qualification[]
-    ) {
-        super()
-        this.firstName = firstName
-        this.lastName = lastName
-        this.isGPSLocationAllowed = isGPSLocationAllowed
-        this.email = email
-        this.avatar = avatar
-        this.qualifications = qualifications
-    }
+  @ManyToMany(type => Organisation, organisation => organisation.responsibles)
+  @JoinTable({name: 'join_user_organisation'})
+  organisations?: Organisation[];
+
+  @OneToMany(type => RequestResponse, requestResponse => requestResponse.user)
+  requestResponses?: RequestResponse[];
+
+  constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, email: string, avatar: string, travellingDistance: number, qualifications: Qualification[]) {
+    super();
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.isGPSLocationAllowed = isGPSLocationAllowed;
+    this.email = email;
+    this.avatar = avatar;
+    this.travellingDistance = travellingDistance;
+    this.qualifications = qualifications;
+  }
 }

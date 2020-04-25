@@ -18,7 +18,7 @@ export interface AddressData {
 }
 
 export interface RequestData {
-    title: string
+    title: string,
     description: string
     isActive: boolean
     startDate: string
@@ -28,11 +28,12 @@ export interface RequestData {
 }
 
 export interface UserData {
-    firstName: string
-    lastName: string
-    isGPSLocationAllowed: boolean
-    email: string
-    avatar: string
-    qualifications: string[]
+    firstName: string;
+    lastName: string;
+    isGPSLocationAllowed: boolean;
+    email: string;
+    avatar: string;
+    travellingDistance: number;
+    qualifications: string[];
     address: AddressData
 }
