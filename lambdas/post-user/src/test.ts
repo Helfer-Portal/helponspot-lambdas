@@ -8,10 +8,10 @@ import {  handler, LambdaInputEvent } from './index'
     email: "test@tedst.de",
     avatar: "picture.jpg",
     address: {
-      houseNumber: "12 a",
-      city: "Munich",
-      street: "Hauptstraße",
-      postalCode: "089",
+      houseNumber: "1",
+      city: "München",
+      street: "Deisenhofenerstrasse",
+      postalCode: "81539",
       country: "Germany"
     },
    qualifications: [

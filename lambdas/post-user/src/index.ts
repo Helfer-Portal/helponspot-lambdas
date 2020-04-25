@@ -1,9 +1,12 @@
+import {convertEntityToResponseModel} from "../../../common/help-on-spot-models/dist/models/ApiResponseModels";
+
 require('dotenv').config();
 
 import {AddressData} from "../../../common/help-on-spot-models/dist/models/RestModels";
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
 import {Address, Connection, Qualification, User, In, Repository} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
+import {getPointFromGeoservice} from "../../../common/help-on-spot-models/dist/utils/getGeolocation";
 
 
 export interface LambdaInputEvent {
@@ -65,17 +68,25 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
   if (userData.address) {
     user.address = new Address(userData.address);
+     try {
+      user.address.point = {
+        type: "Point",
+        coordinates: await getPointFromGeoservice(userData.address)
+      };
+    } catch (e) {
+      await db.disconnect(connection)
+      console.log(`Error during lambda execution: ${e.message}`)
+      return lambdaResponse(400, { message: e.message });
+    }
   }
-
 
   try {
     const savedUser: User = await userRepository.save(user);
-    return lambdaResponse(200, JSON.stringify(savedUser));
+    return lambdaResponse(200, JSON.stringify(convertEntityToResponseModel(savedUser)));
   } catch (e) {
     console.log(`Error during lambda execution: ${JSON.stringify(e)}`)
     return lambdaResponse(500, JSON.stringify(e));
-  }
-  finally {
+  } finally {
       await db.disconnect(connection)
   }
 }

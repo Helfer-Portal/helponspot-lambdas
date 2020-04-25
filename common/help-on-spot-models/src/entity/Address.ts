@@ -22,10 +22,18 @@ export default class Address extends BaseEntity {
   @Column()
   country?: string;
 
+  @Column("geometry", {
+    nullable: true
+  })
+  point?: {
+    type: string;
+    coordinates: number[];
+  };
+
   constructor(addressData: AddressData) {
       super();
       if (addressData) {
-      this.street = addressData.street
+          this.street = addressData.street
           this.houseNumber = addressData.houseNumber
           this.postalCode = addressData.postalCode
           this.city = addressData.city

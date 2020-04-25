@@ -5,11 +5,11 @@ import {OrganisationData} from "../../../common/help-on-spot-models/dist/models/
     const organisaton: OrganisationData = {
         name: "huhu",
         address: {
-            street: "string",
-            postalCode: "string",
-            houseNumber: "string",
-            city: "string",
-            country: "string"
+            street: "Monstraße",
+            postalCode: "81543",
+            houseNumber: "1b",
+            city: "München",
+            country: "Germany"
         },
         email: "a@v",
         logoPath: "string",
