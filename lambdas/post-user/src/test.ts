@@ -9,10 +9,10 @@ import {  handler, LambdaInputEvent } from './index'
     avatar: "picture.jpg",
     travellingDistance: 101,
     address: {
-      houseNumber: "12 a",
-      city: "Munich",
-      street: "Hauptstraße",
-      postalCode: "089",
+      houseNumber: "1",
+      city: "München",
+      street: "Deisenhofenerstrasse",
+      postalCode: "81539",
       country: "Germany"
     },
    qualifications: [

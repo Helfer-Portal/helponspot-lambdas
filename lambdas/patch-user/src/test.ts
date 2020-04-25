@@ -19,11 +19,11 @@ import {User} from "../../../common/help-on-spot-models/dist";
     avatar: "new_picture.jpg",
     travellingDistance: 17,
     address: {
-      houseNumber: "1337 asdas b",
-      city: "Essen adsad",
-      street: "Hauptsadasstraße",
-      postalCode: "123 asd",
-      country: "Malt asdasa"
+      houseNumber: "1",
+      city: "München",
+      street: "Heinrich-Lübke-Straße",
+      postalCode: "81737",
+      country: "Deutschland"
     },
    qualifications: [
       "medicalEducation",
