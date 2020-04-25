@@ -1,4 +1,4 @@
-import {Qualification, User} from "../../../common/help-on-spot-models/dist";
+import {EntityManager, Qualification, User} from "../../../common/help-on-spot-models/dist";
 import Request from "../../../common/help-on-spot-models/dist/entity/Request";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
@@ -27,6 +27,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     const db = new Database();
     const connection = await db.getConnection();
     const userId = event.pathParameters.userId;
+    const radius = event.pathParameters.radius;
 
     try {
         console.log(`Trying to find suitable Requests for user ${userId}`)
@@ -37,6 +38,14 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         if (!user) {
             return lambdaResponse(400, 'Given User does not exist')
         }
+
+        const searchRadius = radius || user.travellingDistance;
+        if (!searchRadius) {
+            return lambdaResponse(400, 'No search-radius provided and user has no travelling distance set!')
+        }
+
+        const manager = new EntityManager(connection);
+        //manager.query()
 
         const userQualifications: Qualification[] = user.qualifications!
         const requestedCity = user.address!.city
