@@ -7,49 +7,49 @@ import {
     JoinColumn,
     ManyToMany,
     CreateDateColumn,
-    UpdateDateColumn, OneToMany
-} from "typeorm";
-import Address from "./Address";
-import User from "./User";
-import Request from "./Request";
-import {AddressData, OrganisationData} from "../models/RestModels";
+    UpdateDateColumn,
+    OneToMany
+} from 'typeorm'
+import Address from './Address'
+import User from './User'
+import Request from './Request'
+import { AddressData, OrganisationData } from '../models/RestModels'
 
 @Entity()
 export default class Organisation extends BaseEntity {
-
     @PrimaryGeneratedColumn('uuid')
-    id?: string;
+    id?: string
 
     @Column()
-    name?: string;
+    name?: string
 
-    @Column({nullable: true})
-    teaser?: string;
+    @Column({ nullable: true })
+    teaser?: string
 
-    @Column({nullable:true})
-    logoPath?: string;
+    @Column({ nullable: true })
+    logoPath?: string
 
-    @Column({nullable: true})
-    email?: string;
+    @Column({ nullable: true })
+    email?: string
 
     @CreateDateColumn()
-    createTime?: Date;
+    createTime?: Date
 
     @UpdateDateColumn()
-    updateTime?: Date;
+    updateTime?: Date
 
-    @OneToOne(type => Address, {cascade: true})
-    @JoinColumn({name: 'join_organisation_address'})
-    address?: Address;
+    @OneToOne((type) => Address, { cascade: true })
+    @JoinColumn({ name: 'join_organisation_address' })
+    address?: Address
 
-    @ManyToMany(type => User, user => user.organisations, {cascade: true})
-    responsibles?: User[];
+    @ManyToMany((type) => User, (user) => user.organisations, { cascade: true })
+    responsibles?: User[]
 
-    @OneToMany(type => Request, request => request.organisation)
+    @OneToMany((type) => Request, (request) => request.organisation)
     requests?: Request[]
 
     constructor(organisationData: OrganisationData, responsibles: User[]) {
-        super();
+        super()
         if (organisationData) {
             this.name = organisationData.name
             this.email = organisationData.email
@@ -58,5 +58,4 @@ export default class Organisation extends BaseEntity {
             this.address = new Address(organisationData.address)
         }
     }
-
 }

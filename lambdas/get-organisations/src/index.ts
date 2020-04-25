@@ -1,8 +1,8 @@
-require('dotenv').config();
+require('dotenv').config()
 
-import Organisation from "../../../common/help-on-spot-models/dist/entity/Organisation";
-import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
-import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
+import Organisation from '../../../common/help-on-spot-models/dist/entity/Organisation'
+import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
+import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
 
 export interface LambdaInputEvent {
     path?: string
@@ -10,20 +10,20 @@ export interface LambdaInputEvent {
 }
 
 export const handler = async (event?: LambdaInputEvent): Promise<LambdaResponse> => {
-    const database = new Database();
-    const connection = await database.getConnection();
+    const database = new Database()
+    const connection = await database.getConnection()
     let result: Organisation[] | Organisation | undefined
     try {
         if (event?.pathParameters?.organisationId) {
             result = await connection.getRepository(Organisation).findOne({
-                where: {id: event.pathParameters.organisationId},
+                where: { id: event.pathParameters.organisationId },
                 relations: ['responsibles', 'address']
             })
-            if(result) {
+            if (result) {
                 console.log('Found one organisation')
             }
         } else {
-            result = await connection.getRepository(Organisation).find({relations: ['responsibles', 'address']})
+            result = await connection.getRepository(Organisation).find({ relations: ['responsibles', 'address'] })
             console.log(`Found '${result!.length}' organisations`)
         }
         if (result) {
@@ -38,5 +38,3 @@ export const handler = async (event?: LambdaInputEvent): Promise<LambdaResponse>
         await database.disconnect(connection)
     }
 }
-
-
