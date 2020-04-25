@@ -37,6 +37,7 @@ export default class RequestResponse extends BaseEntity {
 
     @ManyToOne((type) => Request)
     request?: Request
+
     @Column()
     requestId?: string
 }

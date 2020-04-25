@@ -57,7 +57,7 @@ export default class User extends BaseEntity {
     @JoinTable({ name: 'join_user_organisation' })
     organisations?: Organisation[]
 
-    @OneToMany((type) => RequestResponse, (requestResponse) => requestResponse.user)
+    @OneToMany((type) => RequestResponse, (requestResponse) => requestResponse.user, { cascade: true })
     requestResponses?: RequestResponse[]
 
     constructor(
