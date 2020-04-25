@@ -28,6 +28,10 @@ import {  handler } from './index'
   };
 
   await handler(event, context, (error: any, response: any) => { 
-    console.log(response);
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(response);
+    }
   });
 })()

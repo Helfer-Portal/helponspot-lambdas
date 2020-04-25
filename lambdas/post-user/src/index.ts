@@ -9,6 +9,7 @@ export const handler = async (event: any, context: any, callback: any) => {
   const email = event.request.userAttributes.email;
   if (!email) {
     callback('no email was found in the user attributes');
+    return;
   }
 
   const db = new Database();
@@ -16,6 +17,7 @@ export const handler = async (event: any, context: any, callback: any) => {
 
   if (!connection) {
     callback('no database connection');
+    return;
   }
 
   const userRepository = connection!.getRepository(User); 
@@ -24,6 +26,7 @@ export const handler = async (event: any, context: any, callback: any) => {
     console.log(`A user with email ${email} already exists!`);
     await db.disconnect(connection);
     callback('email is already taken');
+    return;
   }
 
   const user = new User(email, false, []);
