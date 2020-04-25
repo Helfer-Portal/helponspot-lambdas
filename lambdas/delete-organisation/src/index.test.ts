@@ -7,7 +7,7 @@ import User from '../../../common/help-on-spot-models/src/entity/User';
 describe('delete organisation handler', () => {
     it('should return status 500 when organisation id is invalid', async () => {
         const inputEvent: LambdaInputEvent = {
-            pathParameters: { 
+            pathParameters: {
                 organisationId: "invalid-id"
             }
         };
@@ -19,7 +19,7 @@ describe('delete organisation handler', () => {
     it('should return status 200', async () => {
         const createdOrganisation: Organisation = await createOrganisation();
         const inputEvent: LambdaInputEvent = {
-            pathParameters: { 
+            pathParameters: {
                 organisationId: createdOrganisation.id!
             }
         };
@@ -34,7 +34,7 @@ async function createOrganisation(): Promise<Organisation> {
     const orgRepo = connection!.getRepository(Organisation);
 
     const randomEmail = Math.random().toString(36).substring(7) + '@test';
-    const user = await userRepo.save(new User('Test', 'User', false, randomEmail, '', []));
+    const user = await userRepo.save(new User('Test', 'User', false, randomEmail, '', 1, []));
     const addressData: AddressData = {city: 'c', country: 'c', houseNumber: 'h', postalCode: '1', street: 's'};
     const organisationData: OrganisationData = {address: addressData, email: '@email', logoPath: 'lp', name: 'n', responsibles: []};
     const organisation = await orgRepo.save(new Organisation(organisationData, [user]));
