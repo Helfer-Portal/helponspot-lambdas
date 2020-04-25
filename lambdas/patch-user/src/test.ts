@@ -8,7 +8,7 @@ import {User} from "../../../common/help-on-spot-models/dist";
   const userRepo = connection.getRepository(User);
 
   const randomEmail = Math.random().toString(36).substring(7) + "@test";
-  const user = await userRepo.save(new User("Test", "User", false, randomEmail, "", []));
+  const user = await userRepo.save(new User(randomEmail, false, [], "Test", "User"));
   await connection.close();
 
   const patchUser = {

@@ -19,11 +19,11 @@ export default class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column()
-  firstName: string;
+  @Column({ nullable: true })
+  firstName?: string;
 
-  @Column()
-  lastName: string;
+  @Column({ nullable: true })
+  lastName?: string;
 
   @Column()
   isGPSLocationAllowed: boolean;
@@ -32,7 +32,7 @@ export default class User extends BaseEntity {
   email: string;
 
   @Column({ nullable: true })
-  avatar: string;
+  avatar?: string;
 
   @CreateDateColumn()
   createTime?: Date;
@@ -55,7 +55,7 @@ export default class User extends BaseEntity {
   @OneToMany(type => RequestResponse, requestResponse => requestResponse.user)
   requestResponses?: RequestResponse[];
 
-  constructor(firstName: string, lastName: string, isGPSLocationAllowed: boolean, email: string, avatar: string, qualifications: Qualification[]) {
+  constructor(email: string, isGPSLocationAllowed: boolean, qualifications: Qualification[], firstName?: string, lastName?: string, avatar?: string) {
     super();
     this.firstName = firstName;
     this.lastName = lastName;
