@@ -25,6 +25,12 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
 
   const userData: UserData = JSON.parse(event.body)
 
+  try {
+    validateUserData(userData)
+  } catch (e) {
+    return lambdaResponse(400, e.message);
+  }
+
   const db = new Database();
   const connection = await db.getConnection();
 
@@ -86,4 +92,10 @@ async function findEmail(email: string, userRepository: Repository<User>): Promi
   return userRepository.findOne({
     where: { email: email }
   });
+}
+
+function validateUserData(userData: UserData): void {
+  if (userData.qualifications.length === 0) {
+    throw Error('User qualifications missing!')
+  }
 }
