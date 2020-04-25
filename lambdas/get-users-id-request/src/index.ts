@@ -1,4 +1,4 @@
-import {EntityManager, Qualification, User} from "../../../common/help-on-spot-models/dist";
+import {Qualification, User } from "../../../common/help-on-spot-models/dist";
 import Request from "../../../common/help-on-spot-models/dist/entity/Request";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 import {LambdaResponse, lambdaResponse} from "../../../common/help-on-spot-models/dist/utils/lambdaResponse";
@@ -44,9 +44,6 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
             return lambdaResponse(400, 'No search-radius provided and user has no travelling distance set!')
         }
 
-        const manager = new EntityManager(connection);
-        //manager.query()
-
         const userQualifications: Qualification[] = user.qualifications!
         const requestedCity = user.address!.city
 
@@ -57,6 +54,17 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
             .where("address.city = :city", {city: requestedCity})
             .getMany()
         console.log('Found ' + locationMatchedRequests.length + " location matches")
+
+        // WHERE ST_Distance_Sphere(the_geom, ST_MakePoint(your_lon,your_lat)) <= radius_mi * 1609.34
+        const postGisMatches = requestRepository.createQueryBuilder("request")
+          // convert stringified GeoJSON into a geometry with an SRID that matches the
+          // table specification
+          .where("ST_Distance(geom, ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(geom))) > 0")
+          .setParameters({
+              // stringify GeoJSON
+              origin: JSON.stringify(user.address!.point)
+          })
+          .getMany();
 
         const qualificationMatchedRequests = locationMatchedRequests.filter(request => matchesUserQualifications(request, userQualifications))
         console.log('Found ' + qualificationMatchedRequests.length + " location+qualification matches")

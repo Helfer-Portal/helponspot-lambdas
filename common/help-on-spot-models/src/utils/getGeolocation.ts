@@ -15,15 +15,16 @@ export async function getPointFromGeoservice(address: AddressData): Promise<numb
     InvocationType: 'RequestResponse',
     Payload: JSON.stringify({ "body": JSON.stringify(address) }),
   };
-  let latlngData: number[];
+  let lngLatData: number[];
   const data = await lambda.invoke(params).promise();
   const geoserviceResponse = JSON.parse(data.Payload as string);
   const geoserviceResponseBody = JSON.parse(geoserviceResponse.body);
   if (!geoserviceResponseBody.lat) {
     throw Error("Location for address not found!");
   }
-  latlngData = [geoserviceResponseBody.lat, geoserviceResponseBody.lng];
-  console.log(latlngData);
+  // The order of the lng/lat array is important !
+  lngLatData = [geoserviceResponseBody.lng, geoserviceResponseBody.lat];
+  console.log(lngLatData);
 
-  return latlngData;
+  return lngLatData;
 }
