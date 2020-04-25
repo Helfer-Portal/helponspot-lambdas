@@ -8,7 +8,7 @@ import {User} from "../../../common/help-on-spot-models/dist";
   const userRepo = connection.getRepository(User);
 
   const randomEmail = Math.random().toString(36).substring(7) + "@test";
-  const user = await userRepo.save(new User("Test", "User", false, randomEmail, "", []));
+  const user = await userRepo.save(new User("Test", "User", false, randomEmail, "", 1, []));
   await connection.close();
 
   const patchUser = {
@@ -17,6 +17,7 @@ import {User} from "../../../common/help-on-spot-models/dist";
     isGPSLocationAllowed: true,
     email: "test@neu123.de",
     avatar: "new_picture.jpg",
+    travellingDistance: 17,
     address: {
       houseNumber: "1337 asdas b",
       city: "Essen adsad",

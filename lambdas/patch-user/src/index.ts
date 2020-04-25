@@ -48,6 +48,10 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
   user.lastName = userPatchData.lastName;
   user.email = userPatchData.email;
 
+  if (userPatchData.travellingDistance) {
+    user.travellingDistance = userPatchData.travellingDistance;
+  }
+
   if (userPatchData.isGPSLocationAllowed !== undefined) {
     user.isGPSLocationAllowed = userPatchData.isGPSLocationAllowed;
   }

@@ -5,8 +5,9 @@ import {  handler, LambdaInputEvent } from './index'
     firstName: "Max",
     lastName: "Mustermann",
     isGPSLocationAllowed: true,
-    email: "test@tedst.de",
+    email: "test661@tedst.de",
     avatar: "picture.jpg",
+    travellingDistance: 101,
     address: {
       houseNumber: "12 a",
       city: "Munich",
