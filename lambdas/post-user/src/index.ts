@@ -29,7 +29,7 @@ export const handler = async (event: any, context: any, callback: any) => {
         return
     }
 
-    const user = new User(email, false, [])
+    const user = new User(email, false, [], '','', '', 1000)
 
     try {
         await userRepository.save(user)
