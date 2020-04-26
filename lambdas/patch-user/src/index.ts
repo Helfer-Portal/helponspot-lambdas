@@ -1,7 +1,6 @@
-import { convertEntityToResponseModel } from '../../../common/help-on-spot-models/dist/models/ApiResponseModels'
-
 require('dotenv').config()
 
+import { convertEntityToResponseModel } from '../../../common/help-on-spot-models/dist/models/ApiResponseModels'
 import { getPointFromGeoservice } from '../../../common/help-on-spot-models/dist/utils/getGeolocation'
 import { UserData } from '../../../common/help-on-spot-models/src/models/RestModels'
 import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'

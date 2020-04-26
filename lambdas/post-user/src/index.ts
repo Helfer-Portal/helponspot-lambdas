@@ -1,45 +1,45 @@
 require('dotenv').config()
 
-import {User, Repository} from "../../../common/help-on-spot-models/dist";
-import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
+import { User, Repository } from '../../../common/help-on-spot-models/dist'
+import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
 
 export const handler = async (event: any, context: any, callback: any) => {
-    console.log(event);
+    console.log(event)
 
-  const email = event.request.userAttributes.email;
-  if (!email) {
-    callback('no email was found in the user attributes');
-    return;
-  }
+    const email = event.request.userAttributes.email
+    if (!email) {
+        callback('no email was found in the user attributes')
+        return
+    }
 
     const db = new Database()
     const connection = await db.getConnection()
 
     if (!connection) {
         callback('no database connection')
-    return;
-  }
+        return
+    }
 
     const userRepository = connection!.getRepository(User)
 
-  if (await findByEmail(email, userRepository)) {
-    console.log(`A user with email ${email} already exists!`);
-    await db.disconnect(connection);
-    callback('email is already taken');
-    return;
-  }
+    if (await findByEmail(email, userRepository)) {
+        console.log(`A user with email ${email} already exists!`)
+        await db.disconnect(connection)
+        callback('email is already taken')
+        return
+    }
 
-  const user = new User(email, false, []);
+    const user = new User(email, false, [])
 
-  try {
-    await userRepository.save(user);
-    callback(null, event);
-  } catch (e) {
-    console.log(`Error during lambda execution: ${JSON.stringify(e)}`);
-    callback('user cannot be saved');
-  } finally {
-    await db.disconnect(connection);
-  }
+    try {
+        await userRepository.save(user)
+        callback(null, event)
+    } catch (e) {
+        console.log(`Error during lambda execution: ${JSON.stringify(e)}`)
+        callback('user cannot be saved')
+    } finally {
+        await db.disconnect(connection)
+    }
 }
 
 async function findByEmail(email: string, userRepository: Repository<User>): Promise<User | undefined> {
