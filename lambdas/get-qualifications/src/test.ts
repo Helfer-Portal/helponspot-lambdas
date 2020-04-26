@@ -1,9 +1,9 @@
-import { handler, LambdaInputEvent } from './index'
+import { handler } from './index'
 ;(async function () {
-    const requestObject: LambdaInputEvent = {}
+    const requestObject = {}
 
     // fill in a qualification
-    const result = await handler(requestObject)
+    const result = await handler()
 
     console.log(JSON.stringify(result))
 })()

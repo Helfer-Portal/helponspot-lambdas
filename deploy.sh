@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-lambdas=(delete-organisation delete-user get-organisation-requests get-organisations get-qualifications get-request-id get-user get-users-id-request get-volunteers patch-user post-organisation post-request post-user put-volunteer)
+lambdas=(delete-organisation delete-user delete-request get-organisation-requests get-organisations get-qualifications get-request-id get-user get-users-id-request get-volunteers patch-user post-organisation post-request post-user put-volunteer)
 deploymentStage='dev'
 
 selectedLambdas=()
@@ -19,9 +19,9 @@ for lambda in "${selectedLambdas[@]}"
 do
     echo Deployoing lambda: "${lambda}"
     cd ./lambdas/${lambda}
-    npm prune --production
-    npm i --production
+    npm i
     npm run build
+    npm prune --production
     cd ../../
 
     echo "build zip package for: ${lambda}"
