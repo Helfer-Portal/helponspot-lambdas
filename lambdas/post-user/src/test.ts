@@ -1,24 +1,36 @@
-import { handler, LambdaInputEvent } from './index'
+import { handler } from './index'
 ;(async function () {
-    const user = {
-        firstName: 'Max',
-        lastName: 'Mustermann',
-        isGPSLocationAllowed: true,
-        email: 'test661@tedst.de',
-        avatar: 'picture.jpg',
-        travellingDistance: 101,
-        address: {
-            houseNumber: '1',
-            city: 'München',
-            street: 'Deisenhofenerstrasse',
-            postalCode: '81539',
-            country: 'Germany'
+    const event = {
+        version: '1',
+        region: 'eu-central-1',
+        userPoolId: 'eu-central-1_Ydd5t1uwk',
+        userName: 'max.mustermann',
+        callerContext: {
+            awsSdkVersion: 'aws-sdk-unknown-unknown',
+            clientId: '1u97cevfn0bm393ngb9tffqbd5'
         },
-        qualifications: ['driversLicence', 'medicalEducation']
+        triggerSource: 'PostAuthentication_Authentication',
+        request: {
+            userAttributes: {
+                sub: 'b3673ee2-9mju-49cc-t67u-44d05e5f5861',
+                email_verified: true, // eslint-disable-line
+                email: 'max.musterman@example.com'
+            },
+            newDeviceUsed: false
+        },
+        response: {}
     }
-    const requestObject: LambdaInputEvent = {
-        body: JSON.stringify(user)
+
+    const context = {
+        functionVersion: '1',
+        functionName: 'post-confirmation-lambda'
     }
-    const result = await handler(requestObject)
-    console.log(JSON.stringify(result))
+
+    await handler(event, context, (error: any, response: any) => {
+        if (error) {
+            console.log(error)
+        } else {
+            console.log(response)
+        }
+    })
 })()

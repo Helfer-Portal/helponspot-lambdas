@@ -21,11 +21,11 @@ export default class User extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id?: string
 
-    @Column()
-    firstName: string
+    @Column({ nullable: true })
+    firstName?: string
 
-    @Column()
-    lastName: string
+    @Column({ nullable: true })
+    lastName?: string
 
     @Column()
     isGPSLocationAllowed: boolean
@@ -34,7 +34,7 @@ export default class User extends BaseEntity {
     email: string
 
     @Column({ nullable: true })
-    avatar: string
+    avatar?: string
 
     @Column({ nullable: true })
     travellingDistance: number
@@ -61,13 +61,13 @@ export default class User extends BaseEntity {
     requestResponses?: RequestResponse[]
 
     constructor(
+        email: string,
+        isGPSLocationAllowed: boolean,
+        qualifications: Qualification[],
         firstName: string,
         lastName: string,
-        isGPSLocationAllowed: boolean,
-        email: string,
         avatar: string,
-        travellingDistance: number,
-        qualifications: Qualification[]
+        travellingDistance: number
     ) {
         super()
         this.firstName = firstName

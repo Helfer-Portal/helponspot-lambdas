@@ -11,7 +11,7 @@ import { AddressData, OrganisationData, RequestData } from '../../../common/help
     const requestRepo = connection!.getRepository(Request)
 
     const randomEmail = Math.random().toString(36).substring(7) + '@test'
-    const user = await userRepo.save(new User('Test', 'User', false, randomEmail, '', 1, []))
+    const user = await userRepo.save(new User(randomEmail, false, [], 'Test', 'User', '', 1))
     const address: AddressData = { city: 'c', country: 'c', houseNumber: 'h', postalCode: '1', street: 's' }
     const orgData: OrganisationData = { address: address, email: '@lo', logoPath: 'l', name: 'o', responsibles: [] }
     const org = await orgRepo.save(new Organisation(orgData, [user]))

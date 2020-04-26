@@ -34,7 +34,7 @@ async function createOrganisation(): Promise<Organisation> {
     const orgRepo = connection!.getRepository(Organisation)
 
     const randomEmail = Math.random().toString(36).substring(7) + '@test'
-    const user = await userRepo.save(new User('Test', 'User', false, randomEmail, '', 1, []))
+    const user = await userRepo.save(new User(randomEmail, false, [], 'Test', 'User', 1))
     const addressData: AddressData = { city: 'c', country: 'c', houseNumber: 'h', postalCode: '1', street: 's' }
     const organisationData: OrganisationData = {
         address: addressData,

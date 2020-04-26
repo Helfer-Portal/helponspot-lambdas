@@ -23,13 +23,13 @@ import Request from '../../../common/help-on-spot-models/dist/entity/Request'
     const qualifications = await connection.getRepository(Qualification).find()
     const randomEmail = Math.random().toString(36).substring(7) + '@test'
     const user = new User(
+        randomEmail,
+        false,
+        qualifications.filter((q) => q.key === 'physicallyFit'),
         'Test',
         'User',
-        false,
-        randomEmail,
         '',
-        1,
-        qualifications.filter((q) => q.key === 'physicallyFit')
+        1
     )
     user.address = address
     await userRepo.save(user)
