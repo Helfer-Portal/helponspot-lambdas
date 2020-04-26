@@ -1,10 +1,10 @@
-require('dotenv').config();
+require('dotenv').config()
 
 import {User, Repository} from "../../../common/help-on-spot-models/dist";
 import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
 
 export const handler = async (event: any, context: any, callback: any) => {
-  console.log(event);
+    console.log(event);
 
   const email = event.request.userAttributes.email;
   if (!email) {
@@ -12,15 +12,15 @@ export const handler = async (event: any, context: any, callback: any) => {
     return;
   }
 
-  const db = new Database();
-  const connection = await db.getConnection();
+    const db = new Database()
+    const connection = await db.getConnection()
 
-  if (!connection) {
-    callback('no database connection');
+    if (!connection) {
+        callback('no database connection')
     return;
   }
 
-  const userRepository = connection!.getRepository(User); 
+    const userRepository = connection!.getRepository(User)
 
   if (await findByEmail(email, userRepository)) {
     console.log(`A user with email ${email} already exists!`);
@@ -43,7 +43,7 @@ export const handler = async (event: any, context: any, callback: any) => {
 }
 
 async function findByEmail(email: string, userRepository: Repository<User>): Promise<User | undefined> {
-  return userRepository.findOne({
-    where: { email: email }
-  });
+    return userRepository.findOne({
+        where: { email: email }
+    })
 }

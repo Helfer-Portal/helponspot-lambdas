@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-lambdas=(get-organisation-requests get-organisations get-qualifications get-request-id get-user get-users-id-request get-volunteers patch-user post-organisation post-request post-user put-volunteer)
+lambdas=(delete-organisation delete-user get-organisation-requests get-organisations get-qualifications get-request-id get-user get-users-id-request get-volunteers patch-user post-organisation post-request post-user put-volunteer)
 deploymentStage='dev'
 
 selectedLambdas=()
@@ -20,7 +20,7 @@ do
     echo Deployoing lambda: "${lambda}"
     cd ./lambdas/${lambda}
     npm prune --production
-    npm i
+    npm i --production
     npm run build
     cd ../../
 

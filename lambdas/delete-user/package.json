@@ -1,0 +1,35 @@
+{
+  "name": "delete-user",
+  "version": "1.0.0",
+  "description": "Implements DELETE /users/{userId} route",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc -b"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "typescript": "^3.8.3",
+    "@types/dotenv": "^8.2.0",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.11.0",
+    "jest": "^25.4.0",
+    "ts-jest": "^25.4.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
+    "transform": {
+      "\\.(ts)$": "<rootDir>/node_modules/ts-jest"
+    },
+    "testRegex": "(test.ts)$"
+  }
+}

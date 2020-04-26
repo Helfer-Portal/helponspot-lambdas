@@ -1,14 +1,15 @@
+require('dotenv').config()
 import { handler, LambdaInputEvent } from './index'
 import { OrganisationData, AddressData } from '../../../common/help-on-spot-models/src/models/RestModels'
 import { Database } from '../../../common/help-on-spot-models/src/utils/Database'
-import Organisation from '../../../common/help-on-spot-models/src/entity/Organisation'
-import User from '../../../common/help-on-spot-models/src/entity/User'
+import User from '../../../common/help-on-spot-models/dist/entity/User'
+import Organisation from '../../../common/help-on-spot-models/dist/entity/Organisation'
 
-describe('delete organisation handler', () => {
-    it('should return status 500 when organisation id is invalid', async () => {
+describe('delete user handler', () => {
+    it('should return status 500 when user id is invalid', async () => {
         const inputEvent: LambdaInputEvent = {
             pathParameters: {
-                organisationId: 'invalid-id'
+                userId: 'invalid-id'
             }
         }
 
@@ -20,7 +21,7 @@ describe('delete organisation handler', () => {
         const createdOrganisation: Organisation = await createOrganisation()
         const inputEvent: LambdaInputEvent = {
             pathParameters: {
-                organisationId: createdOrganisation.id!
+                userId: createdOrganisation.responsibles![0]!.id!
             }
         }
         const result = await handler(inputEvent)
@@ -29,13 +30,14 @@ describe('delete organisation handler', () => {
 })
 
 async function createOrganisation(): Promise<Organisation> {
-    const connection = await new Database().getConnection()
+    const db = new Database()
+    const connection = await db.getConnection()
     const userRepo = connection!.getRepository(User)
     const orgRepo = connection!.getRepository(Organisation)
 
     const randomEmail = Math.random().toString(36).substring(7) + '@test'
-    const user = await userRepo.save(new User(randomEmail, false, [], 'Test', 'User', 1))
-    const addressData: AddressData = { city: 'c', country: 'c', houseNumber: 'h', postalCode: '1', street: 's' }
+    const user = await userRepo.save(new User('Test', 'User', false, randomEmail, '', 2, []))
+    const addressData: AddressData = { city: 'OrgCity', country: 'c', houseNumber: 'h', postalCode: '1', street: 's' }
     const organisationData: OrganisationData = {
         address: addressData,
         email: '@email',
@@ -44,7 +46,8 @@ async function createOrganisation(): Promise<Organisation> {
         responsibles: []
     }
     const organisation = await orgRepo.save(new Organisation(organisationData, [user]))
-    await connection!.close()
+
+    await db.disconnect(connection)
 
     return organisation
 }

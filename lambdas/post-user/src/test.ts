@@ -27,7 +27,7 @@ import {  handler } from './index'
     functionName: "post-confirmation-lambda"
   };
 
-  await handler(event, context, (error: any, response: any) => { 
+  await handler(event, context, (error: any, response: any) => {
     if (error) {
       console.log(error);
     } else {
