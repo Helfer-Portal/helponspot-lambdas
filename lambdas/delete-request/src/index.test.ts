@@ -1,12 +1,12 @@
-import Request from '../../../common/help-on-spot-models/dist/entity/Request'
+import Request from '/opt/nodejs/common/help-on-spot-models/dist/entity/Request'
 
 require('dotenv').config()
 import { handler, LambdaInputEvent } from './index'
-import { OrganisationData, AddressData } from '../../../common/help-on-spot-models/src/models/RestModels'
-import { Database } from '../../../common/help-on-spot-models/src/utils/Database'
-import User from '../../../common/help-on-spot-models/dist/entity/User'
-import Organisation from '../../../common/help-on-spot-models/dist/entity/Organisation'
-import { RequestData } from '../../../common/help-on-spot-models/dist/models/RestModels'
+import { OrganisationData, AddressData } from '/opt/nodejs/common/help-on-spot-models/dist/models/RestModels'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
+import User from '/opt/nodejs/common/help-on-spot-models/dist/entity/User'
+import Organisation from '/opt/nodejs/common/help-on-spot-models/dist/entity/Organisation'
+import { RequestData } from '/opt/nodejs/common/help-on-spot-models/dist/models/RestModels'
 import exp = require('constants')
 
 describe('delete user handler', () => {
@@ -40,7 +40,7 @@ async function createRequest(): Promise<Request> {
     const orgRepo = connection!.getRepository(Organisation)
 
     const randomEmail = Math.random().toString(36).substring(7) + '@test'
-    const user = await userRepo.save(new User('Test', 'User', false, randomEmail, '', 2, []))
+    const user = await userRepo.save(new User(randomEmail, false, [], 'Test', 'User', "", 1))
     const addressData: AddressData = { city: 'OrgCity', country: 'c', houseNumber: 'h', postalCode: '1', street: 's' }
     const organisationData: OrganisationData = {
         address: addressData,
