@@ -45,13 +45,22 @@ GEOSERVICE_LAMBDA_NAME=
 ## Deploy lambdas to AWS
 * install aws cli
 * setup your AWS credentials wth `aws configure`
-* run ``./deploy.sh`` in project root
+* make sure your lambda uses correct layers version in deploy-lambda.sh script
+  * check available layers versions with ``aws lambda list-layer-versions --layer-name common``
+* run ``./deploy-lambda.sh`` in project root
 * select the lambda you want to deploy or `all` to deploy every lambda
+
+## Deploy lambda layers to AWS
+* install aws cli
+* setup your AWS credentials wth `aws configure`
+* run ``./deploy-layers.sh`` from project root
+
+*Note that, each time you publish layers to aws, a new version is created*
 
 ## Steps to create a new lambda function
 * create a new folder in ``/lambdas``, name it according to the served endpoint
 * setup a typescript project, make sure the tsconfig has a reference to the commons project you want to include
-* add folder name to `deploy.sh` script's lambda array (Line 5)
+* add folder name to `deploy-lambda.sh` script's lambda array (Line 5)
 * create a new lambda function in region eu-central-1 (AWS console, CLI, whatever) 
 * name it `HoS_{folder}_dev`
 * set handler path as it is found in the .zip `lambdas/{folder}/dist/index.handler`
