@@ -1,8 +1,8 @@
 import { handler, LambdaInputEvent } from './index'
-import { OrganisationData, AddressData } from '../../../common/help-on-spot-models/src/models/RestModels'
-import { Database } from '../../../common/help-on-spot-models/src/utils/Database'
-import Organisation from '../../../common/help-on-spot-models/src/entity/Organisation'
-import User from '../../../common/help-on-spot-models/src/entity/User'
+import { OrganisationData, AddressData } from '/opt/nodejs/common/help-on-spot-models/src/models/RestModels'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/src/utils/Database'
+import Organisation from '/opt/nodejs/common/help-on-spot-models/src/entity/Organisation'
+import User from '/opt/nodejs/common/help-on-spot-models/src/entity/User'
 
 describe('delete organisation handler', () => {
     it('should return status 500 when organisation id is invalid', async () => {
@@ -34,7 +34,7 @@ async function createOrganisation(): Promise<Organisation> {
     const orgRepo = connection!.getRepository(Organisation)
 
     const randomEmail = Math.random().toString(36).substring(7) + '@test'
-    const user = await userRepo.save(new User(randomEmail, false, [], 'Test', 'User', 1))
+    const user = await userRepo.save(new User(randomEmail, false, [], 'Test', 'User', "", 1))
     const addressData: AddressData = { city: 'c', country: 'c', houseNumber: 'h', postalCode: '1', street: 's' }
     const organisationData: OrganisationData = {
         address: addressData,
