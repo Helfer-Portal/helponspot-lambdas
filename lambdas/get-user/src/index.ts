@@ -1,5 +1,5 @@
 require('dotenv').config()
-import { User } from '/opt/nodejs/common/help-on-spot-models/dist'
+import { User, Connection } from '/opt/nodejs/common/help-on-spot-models/dist'
 import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
 import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
 
@@ -7,16 +7,14 @@ export interface LambdaInputEvent {
     pathParameters: any
 }
 
+const relevantRelations: string[] = ['address', 'qualifications', 'organisations']
+
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
     const userId = event.pathParameters.userId
     const db = new Database()
     const connection = await db.getConnection()
     try {
-        const repo = connection.getRepository(User)
-        const user: User | undefined = await repo.findOne({
-            where: { id: userId },
-            relations: ['address', 'qualifications', 'organisations']
-        })
+        const user = await findUser(userId, connection)
         if (!user) {
             return lambdaResponse(404, 'User not found!')
         }
@@ -27,4 +25,24 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     } finally {
         await db.disconnect(connection)
     }
+}
+
+async function findUser(userId: string, connection: Connection): Promise<User | undefined> {
+    const repo = connection.getRepository(User)
+    if (isEmail(userId)) {
+        return await repo.findOne({
+            where: {email: userId},
+            relations: relevantRelations
+        })
+    } else {
+        return await repo.findOne({
+            where: {id: userId},
+            relations: relevantRelations
+        })
+    }
+
+}
+
+function isEmail(userId: string): boolean {
+    return userId.includes('@')
 }

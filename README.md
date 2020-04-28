@@ -12,20 +12,17 @@ This repo contains all aws lambda functions, plus a commons library.
 
 
 ## Start locally
-* Setup a local postgres with docker command
-
-```docker run --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=12345 postgres:10.11```
 
 * `npm run test` - in any lambda folder
 * If you want to lint/format your code, run the root-level lint/format npm commands (see `/package.json`)
 
 ### Local Postgis DB
-
 * If you need postgis support for your local database use:
 
 ```docker run --name "postgis" -p 5432:5432 -d -t kartoza/postgis:10.0-2.4```
 
 * You can then login with user "docker", password "docker" and databasename "gis"
+
 
 ### Local environment variables
 * Create a local .env file in the root directory of each lambda  

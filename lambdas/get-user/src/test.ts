@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 import { handler, LambdaInputEvent } from './index'
 import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
 import { Address, Qualification, User } from '/opt/nodejs/common/help-on-spot-models/dist'
@@ -20,15 +22,7 @@ describe("get qualifications handler", () => {
 
         const qualifications = await connection.getRepository(Qualification).find()
         const randomEmail = Math.random().toString(36).substring(7) + '@test'
-        const user = new User(
-            randomEmail, 
-            false, 
-            qualifications.filter((q) => q.key === 'physicallyFit'),
-            'Test', 
-            'User', 
-            "", 
-            1
-        )
+        const user = await userRepo.save(new User(randomEmail, false, qualifications, 'Test', 'User', '', 1))
         user.address = address
         const savedUser = await userRepo.save(user)
         const addressData: AddressData = { city: 'c', country: 'c', houseNumber: 'h', postalCode: '1', street: 's' }
@@ -37,11 +31,18 @@ describe("get qualifications handler", () => {
 
         const requestObject: LambdaInputEvent = {
             pathParameters: {
+                userId: savedUser.email
+            }
+        }
+        const byId = await handler(requestObject)
+        expect(byId.statusCode).toEqual(200)
+
+        const requestObject2: LambdaInputEvent = {
+            pathParameters: {
                 userId: savedUser.id
             }
         }
-
-        const result = await handler(requestObject)
-        expect(result.statusCode).toEqual(200)
+        const byEmail = await handler(requestObject2)
+        expect(byEmail.statusCode).toEqual(200)
     })
 })
