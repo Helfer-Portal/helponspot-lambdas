@@ -1,7 +1,7 @@
 {
-  "name": "delete-organisation",
+  "name": "delete-user",
   "version": "1.0.0",
-  "description": "Implements delete organisation route",
+  "description": "Implements DELETE /users/{userId} route",
   "main": "index.js",
   "scripts": {
     "test": "jest",

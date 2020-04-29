@@ -1,41 +1,36 @@
-import {  handler, LambdaInputEvent } from './index'
-import {Database} from "../../../common/help-on-spot-models/dist/utils/Database";
-import {User} from "../../../common/help-on-spot-models/dist";
+import { handler, LambdaInputEvent } from './index'
+import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
+import { User } from '../../../common/help-on-spot-models/dist'
+;(async function () {
+    const connection = await new Database().getConnection()
+    const userRepo = connection.getRepository(User)
 
-(async function () {
+    const randomEmail = Math.random().toString(36).substring(7) + '@test'
+    const user = await userRepo.save(new User(randomEmail, false, [], 'Test', 'User', '', 1))
+    await connection.close()
 
-  const connection = await new Database().getConnection();
-  const userRepo = connection.getRepository(User);
-
-  const randomEmail = Math.random().toString(36).substring(7) + "@test";
-  const user = await userRepo.save(new User("Test", "User", false, randomEmail, "", 1, []));
-  await connection.close();
-
-  const patchUser = {
-    firstName: "Max neu",
-    lastName: "Mustermann neu",
-    isGPSLocationAllowed: true,
-    email: "test@neu123.de",
-    avatar: "new_picture.jpg",
-    travellingDistance: 17,
-    address: {
-      houseNumber: "1",
-      city: "München",
-      street: "Heinrich-Lübke-Straße",
-      postalCode: "81737",
-      country: "Deutschland"
-    },
-   qualifications: [
-      "medicalEducation",
-      "driversLicence"
-    ]
-  }
-  const requestObject: LambdaInputEvent = {
-    body: JSON.stringify(patchUser),
-    pathParameters: {
-      userId: user.id
+    const patchUser = {
+        firstName: 'Max neu',
+        lastName: 'Mustermann neu',
+        isGPSLocationAllowed: true,
+        email: 'test@neu123.de',
+        avatar: 'new_picture.jpg',
+        travellingDistance: 17,
+        address: {
+            houseNumber: '1',
+            city: 'München',
+            street: 'Heinrich-Lübke-Straße',
+            postalCode: '81737',
+            country: 'Deutschland'
+        },
+        qualifications: ['medicalEducation', 'driversLicence']
     }
-  }
-  const result = await handler(requestObject)
-  console.log(JSON.stringify(result))
+    const requestObject: LambdaInputEvent = {
+        body: JSON.stringify(patchUser),
+        pathParameters: {
+            userId: user.id
+        }
+    }
+    const result = await handler(requestObject)
+    console.log(JSON.stringify(result))
 })()
