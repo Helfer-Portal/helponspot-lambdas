@@ -12,7 +12,8 @@ export interface LambdaInputEvent {
     }
 }
 
-/* TODO: this should probably be done as part of the DB query. But since this will change anyway once we change to
+/*
+ * TODO: this should probably be done as part of the DB query. But since this will change anyway once we change to
  * actual locations I guess it is good enough atm.
  */
 function matchesUserQualifications(request: Request, userQualifications: Qualification[] | undefined): boolean {
@@ -48,33 +49,40 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
         const requestedCity = user.address!.city
 
         const requestRepository = connection.getRepository(Request)
-        const locationMatchedRequests = await requestRepository
-            .createQueryBuilder('request')
-            .leftJoinAndSelect('request.address', 'address')
-            .leftJoinAndSelect('request.qualifications', 'qualifications')
-            .where('address.city = :city', { city: requestedCity })
-            .getMany()
-        console.log('Found ' + locationMatchedRequests.length + ' location matches')
 
-        // WHERE ST_Distance_Sphere(the_geom, ST_MakePoint(your_lon,your_lat)) <= radius_mi * 1609.34
-        const postGisMatches = requestRepository.createQueryBuilder("request")
-          // convert stringified GeoJSON into a geometry with an SRID that matches the
-          // table specification
-          .where("ST_Distance(geom, ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(geom))) > 0")
-          .setParameters({
-              // stringify GeoJSON
-              origin: JSON.stringify(user.address!.point)
-          })
-          .getMany();
+        /**
+         * raw query:
+         SELECT *
+         FROM request AS req
+         INNER JOIN address AS add ON add.id = req."addressId"
+         WHERE ST_Distance_Sphere(add.point, ST_MakePoint(52.5243741,13.4057372)) <= 1800;
+         * Docs:
+         * https://github.com/typeorm/typeorm/blob/master/docs/entities.md#spatial-columns
+         */
+        const geoMatchedRequests = await requestRepository
+          .createQueryBuilder("request")
+          .innerJoin('request.address', 'address')
+          .where(
+            'ST_Distance_Sphere(address.point, ST_MakePoint(:userLng,:userLat)) <= :userTravellingDistance',
+            {
+                userLng: user.address!.point!.coordinates[0],
+                userLat: user.address!.point!.coordinates[1],
+                userTravellingDistance: user.travellingDistance
+            }
+          )
+          .getMany()
 
-        const qualificationMatchedRequests = locationMatchedRequests.filter((request) =>
+        console.log('Found ' + geoMatchedRequests.length + ' geo location matches')
+
+        if (!geoMatchedRequests) {
+            return lambdaResponse(404, 'No Requests match the given query')
+        }
+
+        const qualificationMatchedRequests = geoMatchedRequests.filter((request) =>
             matchesUserQualifications(request, userQualifications)
         )
         console.log('Found ' + qualificationMatchedRequests.length + ' location+qualification matches')
 
-        if (!locationMatchedRequests) {
-            return lambdaResponse(404, 'No Requests match the given query')
-        }
         return lambdaResponse(200, qualificationMatchedRequests)
     } catch (e) {
         console.log(`Error during lambda execution: ${e}`)

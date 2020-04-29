@@ -7,18 +7,14 @@ import { Database } from '../../../common/help-on-spot-models/dist/utils/Databas
 import { Address, Qualification, User } from '../../../common/help-on-spot-models/dist'
 import { AddressData, OrganisationData, RequestData } from '../../../common/help-on-spot-models/dist/models/RestModels'
 import Request from '../../../common/help-on-spot-models/dist/entity/Request'
-;(async function () {
+import {requestData1, requestData2, requestData3, userAddresData} from "./testData";
+
+(async function () {
     const connection = await new Database().getConnection()
     const userRepo = connection!.getRepository(User)
     const orgRepo = connection!.getRepository(Organisation)
-    const adata: AddressData = {
-        country: 'germany',
-        city: 'myyCity',
-        postalCode: '123',
-        houseNumber: '1',
-        street: 'street'
-    }
-    const address = await connection.getRepository(Address).save(new Address(adata))
+    const adata = new Address(userAddresData);
+    const address = await connection.getRepository(Address).save(adata)
 
     const qualifications = await connection.getRepository(Qualification).find()
     const randomEmail = Math.random().toString(36).substring(7) + '@test'
@@ -29,7 +25,7 @@ import Request from '../../../common/help-on-spot-models/dist/entity/Request'
         'Test',
         'User',
         '',
-        1
+        1600
     )
     user.address = address
     await userRepo.save(user)
@@ -37,35 +33,27 @@ import Request from '../../../common/help-on-spot-models/dist/entity/Request'
     const organ: OrganisationData = { address: addressData, email: '@lo', logoPath: 'l', name: 'o', responsibles: [] }
     const organisation = await orgRepo.save(new Organisation(organ, [user]))
 
-    const requestData: RequestData = {
-        title: 'huhu',
-        address: {
-            street: 'string',
-            postalCode: 'string',
-            houseNumber: 'string',
-            city: 'myyCity',
-            country: 'string'
-        },
-        description: 'desc',
-        endDate: '2004-07-11',
-        startDate: '2004-07-12',
-        isActive: false,
-        qualificationKeys: ['physicallyFit']
-    }
-    await connection.getRepository(Request).save(new Request(requestData, organisation, []))
+    await connection.getRepository(Request).save(new Request(requestData1, organisation, []))
     await connection.getRepository(Request).save(
         new Request(
-            requestData,
+            requestData1,
             organisation,
             qualifications.filter((q) => q.key === 'physicallyFit')
         )
     )
     await connection.getRepository(Request).save(
         new Request(
-            requestData,
+            requestData2,
             organisation,
-            qualifications.filter((q) => q.key === 'driversLicence')
+            qualifications.filter((q) => q.key === 'physicallyFit')
         )
+    )
+    await connection.getRepository(Request).save(
+      new Request(
+        requestData3,
+        organisation,
+        qualifications.filter((q) => q.key === 'physicallyFit')
+      )
     )
 
     await connection.close()
