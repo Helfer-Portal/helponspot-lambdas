@@ -6,7 +6,7 @@ import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-mod
 export interface LambdaInputEvent {
     pathParameters: {
         userId: string
-        radius?: string
+        radius?: number
         requestType?: string
         location?: { lat: number; long: number }
     }
@@ -14,7 +14,6 @@ export interface LambdaInputEvent {
 
 /*
  * TODO: this should probably be done as part of the DB query. But since this will change anyway once we change to
- * actual locations I guess it is good enough atm.
  */
 function matchesUserQualifications(request: Request, userQualifications: Qualification[] | undefined): boolean {
     if (!request.qualifications || request.qualifications.length === 0) {
@@ -56,18 +55,17 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
          FROM request AS req
          INNER JOIN address AS add ON add.id = req."addressId"
          WHERE ST_Distance_Sphere(add.point, ST_MakePoint(52.5243741,13.4057372)) <= 1800;
-         * Docs:
-         * https://github.com/typeorm/typeorm/blob/master/docs/entities.md#spatial-columns
          */
         const geoMatchedRequests = await requestRepository
           .createQueryBuilder("request")
           .innerJoin('request.address', 'address')
+          .innerJoinAndSelect('request.qualifications', 'qualifications')
           .where(
             'ST_Distance_Sphere(address.point, ST_MakePoint(:userLng,:userLat)) <= :userTravellingDistance',
             {
                 userLng: user.address!.point!.coordinates[0],
                 userLat: user.address!.point!.coordinates[1],
-                userTravellingDistance: user.travellingDistance
+                userTravellingDistance: searchRadius
             }
           )
           .getMany()

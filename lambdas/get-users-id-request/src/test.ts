@@ -33,12 +33,11 @@ import {requestData1, requestData2, requestData3, userAddresData} from "./testDa
     const organ: OrganisationData = { address: addressData, email: '@lo', logoPath: 'l', name: 'o', responsibles: [] }
     const organisation = await orgRepo.save(new Organisation(organ, [user]))
 
-    await connection.getRepository(Request).save(new Request(requestData1, organisation, []))
     await connection.getRepository(Request).save(
         new Request(
             requestData1,
             organisation,
-            qualifications.filter((q) => q.key === 'physicallyFit')
+            qualifications.filter((q) => q.key === 'medicalEducation')
         )
     )
     await connection.getRepository(Request).save(
@@ -55,7 +54,6 @@ import {requestData1, requestData2, requestData3, userAddresData} from "./testDa
         qualifications.filter((q) => q.key === 'physicallyFit')
       )
     )
-
     await connection.close()
 
     const requestObject: LambdaInputEvent = {
@@ -65,6 +63,16 @@ import {requestData1, requestData2, requestData3, userAddresData} from "./testDa
     }
 
     const result = await handler(requestObject)
-
     console.log(JSON.stringify(result))
+
+    const requestObjectWithRadius: LambdaInputEvent = {
+        pathParameters: {
+            userId: user.id!,
+            radius: 3000
+        }
+    }
+
+    const resultWithRadius = await handler(requestObjectWithRadius)
+    console.log(JSON.stringify(resultWithRadius))
+
 })()
