@@ -1,7 +1,7 @@
 require('dotenv').config()
 
-import { User, Repository } from '../../../common/help-on-spot-models/dist'
-import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
+import { User, Repository } from '/opt/nodejs/common/help-on-spot-models/dist'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
 
 export const handler = async (event: any, context: any, callback: any) => {
     console.log(event)
