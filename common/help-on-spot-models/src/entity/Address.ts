@@ -41,10 +41,12 @@ export default class Address extends BaseEntity {
             this.postalCode = addressData.postalCode
             this.city = addressData.city
             this.country = addressData.country
-            this.point = addressData.coordinates ? {
-                type: 'point',
-                coordinates: addressData.coordinates
-            } : undefined
+            this.point = addressData.coordinates
+                ? {
+                      type: 'point',
+                      coordinates: addressData.coordinates
+                  }
+                : undefined
         }
     }
 }

@@ -41,7 +41,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
             return lambdaResponse(400, 'Given User does not exist')
         }
 
-        const searchRadius = radius || user.travellingDistance;
+        const searchRadius = radius || user.travellingDistance
         if (!searchRadius) {
             return lambdaResponse(400, 'No search-radius provided and user has no travelling distance set!')
         }
@@ -59,18 +59,15 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
          WHERE ST_Distance_Sphere(add.point, ST_MakePoint(52.5243741,13.4057372)) <= 1800;
          */
         const geoMatchedRequests = await requestRepository
-          .createQueryBuilder("request")
-          .innerJoin('request.address', 'address')
-          .innerJoinAndSelect('request.qualifications', 'qualifications')
-          .where(
-            'ST_Distance_Sphere(address.point, ST_MakePoint(:userLng,:userLat)) <= :userTravellingDistance',
-            {
+            .createQueryBuilder('request')
+            .innerJoin('request.address', 'address')
+            .innerJoinAndSelect('request.qualifications', 'qualifications')
+            .where('ST_Distance_Sphere(address.point, ST_MakePoint(:userLng,:userLat)) <= :userTravellingDistance', {
                 userLng: user.address!.point!.coordinates[0],
                 userLat: user.address!.point!.coordinates[1],
                 userTravellingDistance: searchRadius
-            }
-          )
-          .getMany()
+            })
+            .getMany()
 
         console.log('Found ' + geoMatchedRequests.length + ' geo location matches')
 

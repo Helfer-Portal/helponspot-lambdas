@@ -1,7 +1,6 @@
-
-import {Connection, User} from '../../../common/help-on-spot-models/dist'
-import {Database} from '../../../common/help-on-spot-models/dist/utils/Database'
-import {LambdaResponse, lambdaResponse} from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
+import { Connection, User } from '../../../common/help-on-spot-models/dist'
+import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
+import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
 
 export interface LambdaInputEvent {
     pathParameters: any
@@ -31,16 +30,15 @@ async function findUser(userId: string, connection: Connection): Promise<User | 
     const repo = connection.getRepository(User)
     if (isEmail(userId)) {
         return await repo.findOne({
-            where: {email: userId},
+            where: { email: userId },
             relations: relevantRelations
         })
     } else {
         return await repo.findOne({
-            where: {id: userId},
+            where: { id: userId },
             relations: relevantRelations
         })
     }
-
 }
 
 function isEmail(userId: string): boolean {

@@ -7,13 +7,12 @@ import { Database } from '../../../common/help-on-spot-models/dist/utils/Databas
 import { Address, Qualification, User } from '../../../common/help-on-spot-models/dist'
 import { AddressData, OrganisationData, RequestData } from '../../../common/help-on-spot-models/dist/models/RestModels'
 import Request from '../../../common/help-on-spot-models/dist/entity/Request'
-import {requestData1, requestData2, requestData3, userAddresData} from "./testData";
-
-(async function () {
+import { requestData1, requestData2, requestData3, userAddresData } from './testData'
+;(async function () {
     const connection = await new Database().getConnection()
     const userRepo = connection!.getRepository(User)
     const orgRepo = connection!.getRepository(Organisation)
-    const adata = new Address(userAddresData);
+    const adata = new Address(userAddresData)
     const address = await connection.getRepository(Address).save(adata)
 
     const qualifications = await connection.getRepository(Qualification).find()
@@ -48,11 +47,11 @@ import {requestData1, requestData2, requestData3, userAddresData} from "./testDa
         )
     )
     await connection.getRepository(Request).save(
-      new Request(
-        requestData3,
-        organisation,
-        qualifications.filter((q) => q.key === 'physicallyFit')
-      )
+        new Request(
+            requestData3,
+            organisation,
+            qualifications.filter((q) => q.key === 'physicallyFit')
+        )
     )
     await connection.close()
 
@@ -67,7 +66,7 @@ import {requestData1, requestData2, requestData3, userAddresData} from "./testDa
 
     const requestObjectWithRadius: LambdaInputEvent = {
         pathParameters: {
-            userId: user.id!,
+            userId: user.id!
         },
         queryStringParameters: {
             radius: 3000
@@ -76,5 +75,4 @@ import {requestData1, requestData2, requestData3, userAddresData} from "./testDa
 
     const resultWithRadius = await handler(requestObjectWithRadius)
     console.log(JSON.stringify(resultWithRadius))
-
 })()

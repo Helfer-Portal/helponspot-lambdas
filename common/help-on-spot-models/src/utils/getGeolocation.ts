@@ -21,8 +21,8 @@ export async function getPointFromGeoservice(address: AddressData): Promise<numb
     if (!geoserviceResponseBody.lat) {
         throw Error('Location for address not found!')
     }
-    const lngLatData = [geoserviceResponseBody.lng, geoserviceResponseBody.lat];
+    const lngLatData = [geoserviceResponseBody.lng, geoserviceResponseBody.lat]
     console.log(lngLatData)
 
-    return lngLatData;
+    return lngLatData
 }
