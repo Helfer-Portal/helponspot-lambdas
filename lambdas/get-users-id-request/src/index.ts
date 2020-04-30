@@ -6,9 +6,11 @@ import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-mod
 export interface LambdaInputEvent {
     pathParameters: {
         userId: string
-        radius?: number
         requestType?: string
         location?: { lat: number; long: number }
+    }
+    queryStringParameters?: {
+        radius?: number
     }
 }
 
@@ -27,7 +29,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     const db = new Database()
     const connection = await db.getConnection()
     const userId = event.pathParameters.userId
-    const radius = event.pathParameters.radius
+    const radius = event.queryStringParameters && event.queryStringParameters.radius
 
     try {
         console.log(`Trying to find suitable Requests for user ${userId}`)

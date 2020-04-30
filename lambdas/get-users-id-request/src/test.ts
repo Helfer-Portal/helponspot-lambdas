@@ -68,6 +68,8 @@ import {requestData1, requestData2, requestData3, userAddresData} from "./testDa
     const requestObjectWithRadius: LambdaInputEvent = {
         pathParameters: {
             userId: user.id!,
+        },
+        queryStringParameters: {
             radius: 3000
         }
     }
