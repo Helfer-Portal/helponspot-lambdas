@@ -1,11 +1,11 @@
 require('dotenv').config()
 
-import { convertEntityToResponseModel } from '../../../common/help-on-spot-models/dist/models/ApiResponseModels'
-import { getPointFromGeoservice } from '../../../common/help-on-spot-models/dist/utils/getGeolocation'
-import { UserData } from '../../../common/help-on-spot-models/src/models/RestModels'
-import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
-import { Address, Connection, Qualification, User, In } from '../../../common/help-on-spot-models/dist'
-import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
+import { convertEntityToResponseModel } from '/opt/nodejs/common/help-on-spot-models/dist/models/ApiResponseModels'
+import { getPointFromGeoservice } from '/opt/nodejs/common/help-on-spot-models/dist/utils/getGeolocation'
+import { UserData } from '/opt/nodejs/common/help-on-spot-models/src/models/RestModels'
+import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
+import { Address, Connection, Qualification, User, In } from '/opt/nodejs/common/help-on-spot-models/dist'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
 
 export interface LambdaInputEvent {
     pathParameters: any
