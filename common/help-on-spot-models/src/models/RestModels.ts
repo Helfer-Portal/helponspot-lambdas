@@ -15,6 +15,7 @@ export interface AddressData {
     houseNumber: string
     city: string
     country: string
+    coordinates?: number[]
 }
 
 export interface RequestData {

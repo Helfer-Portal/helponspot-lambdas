@@ -42,8 +42,8 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
             type: 'Point',
             coordinates
         }
-        const savedRequest = await connection!.getRepository(Request).save(convertEntityToResponseModel(request))
-        return lambdaResponse(200, JSON.stringify(savedRequest))
+        const savedRequest = await connection!.getRepository(Request).save(request)
+        return lambdaResponse(200, JSON.stringify(convertEntityToResponseModel(savedRequest)))
     } catch (e) {
         console.log(`Error during lambda execution:\n ${e}`)
         return lambdaResponse(500, JSON.stringify(e))
