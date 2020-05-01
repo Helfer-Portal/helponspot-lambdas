@@ -14,9 +14,7 @@ export interface LambdaInputEvent {
     }
 }
 
-/*
- * TODO: this should probably be done as part of the DB query. But since this will change anyway once we change to
- */
+// TODO: this should probably be done as part of the DB query.
 function matchesUserQualifications(request: Request, userQualifications: Qualification[] | undefined): boolean {
     if (!request.qualifications || request.qualifications.length === 0) {
         return true
