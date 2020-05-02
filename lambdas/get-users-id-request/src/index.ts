@@ -60,7 +60,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
             .createQueryBuilder('request')
             .innerJoin('request.address', 'address')
             .innerJoinAndSelect('request.qualifications', 'qualifications')
-            .where('ST_Distance_Sphere(address.point, ST_MakePoint(:userLng,:userLat)) <= :userTravellingDistance', {
+            .where('ST_Distance(address.point, ST_SetSRID(ST_MakePoint(:userLng,:userLat),4326)) <= :userTravellingDistance', {
                 userLng: user.address!.point!.coordinates[0],
                 userLat: user.address!.point!.coordinates[1],
                 userTravellingDistance: searchRadius

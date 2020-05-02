@@ -26,7 +26,9 @@ export default class Address extends BaseEntity {
      * the second ([1]) element represents the latitude value
      */
     @Column('geometry', {
-        nullable: true
+        nullable: true,
+        spatialFeatureType: 'Point',
+        srid: 4326
     })
     point?: {
         type: string
