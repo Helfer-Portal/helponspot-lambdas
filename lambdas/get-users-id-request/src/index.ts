@@ -58,7 +58,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
          */
         const geoMatchedRequests = await requestRepository
             .createQueryBuilder('request')
-            .innerJoin('request.address', 'address')
+            .innerJoinAndSelect('request.address', 'address')
             .innerJoinAndSelect('request.qualifications', 'qualifications')
             .where('ST_Distance(address.point, ST_SetSRID(ST_MakePoint(:userLng,:userLat),4326)) <= :userTravellingDistance', {
                 userLng: user.address!.point!.coordinates[0],
