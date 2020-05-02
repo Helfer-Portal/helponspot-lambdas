@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing the Help On Spot backend.
+
+Globals:
+  Function:
+    Timeout: 5
+  Api:
+    Cors:
+      AllowMethods: "'GET,OPTIONS'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: "'*'"
+
+Parameters:
+  Environment:
+    Type: String
+    Description: Choose between local or AWS
+    AllowedValues:
+      - local
+      - aws
+
+Resources:
+  ###################
+  ##    Lambdas    ##
+  ###################
+  GetQualifications:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambdas/get-qualifications/dist/index.handler
+      Runtime: nodejs12.x
+      CodeUri: .
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role: >-
+        arn:aws:iam::198891906952:role/service-role/HoS_get-qualifications_dev-role-gz7x4ef8
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /qualifications
+            Method: GET
+      Environment:
+        Variables:
+          DATABASE_HOST: localhost
+          DATABASE_NAME: gis
+          DATABASE_PASSWORD: docker
+          DATABASE_USERNAME: docker
