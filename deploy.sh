@@ -45,12 +45,12 @@ do
         handler="lambdas/${lambda}/dist/index.handler"
         role="arn:aws:iam::198891906952:role/HoS-lambda-role"
         # not really important just needs to be unique
-        statemanetId="${lambda}-cad7-4775-bf56-36baa21030a7"
+        statementId="${lambda}-cad7-4775-bf56-36baa21030a7"
         envs=`cat ./.lambda-envs.txt`
 
         aws lambda create-function --function-name ${functionName} --runtime nodejs12.x --role ${role} --handler ${handler} --zip-file fileb://${lambda}.zip --environment "Variables={${envs}}"
         # add trigger that allows api gateway to call the lambda
-        aws lambda add-permission  --function-name ${functionName} --statement-id ${statemanetId}  --action "lambda:InvokeFunction" --principal "apigateway.amazonaws.com" --action lambda:InvokeFunction --source-arn "arn:aws:execute-api:eu-central-1:198891906952:js7pyl1b87/*"
+        aws lambda add-permission  --function-name ${functionName} --statement-id ${statementId}  --action "lambda:InvokeFunction" --principal "apigateway.amazonaws.com" --action lambda:InvokeFunction --source-arn "arn:aws:execute-api:eu-central-1:198891906952:js7pyl1b87/*"
 
     else
         echo "Updating existing lambda function ${functionName}"
