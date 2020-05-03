@@ -7,7 +7,7 @@ Globals:
     Timeout: 5
   Api:
     Cors:
-      AllowMethods: "'GET,OPTIONS'"
+      AllowMethods: "'GET,OPTIONS,POST,PATCH,DELETE'"
       AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
       AllowOrigin: "'*'"
 
@@ -26,9 +26,9 @@ Resources:
   GetQualifications:
     Type: 'AWS::Serverless::Function'
     Properties:
-      Handler: lambdas/get-qualifications/dist/index.handler
+      Handler: dist/lambdas/get-qualifications/src/index.handler
       Runtime: nodejs12.x
-      CodeUri: .
+      CodeUri: lambdas/get-qualifications
       Description: ''
       MemorySize: 128
       Timeout: 10
