@@ -5,14 +5,16 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -b",
-    "test": "tsc -b && ts-node ./src/test.ts"
+    "test": "tsc -b && ts-node ./src/test.ts",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "typeorm": "^0.2.24",
+    "aws-sdk": "^2.659.0",
     "pg": "^8.0.2",
-    "aws-sdk": "^2.659.0"
+    "tsconfig-paths": "^3.9.0",
+    "typeorm": "^0.2.24"
   },
   "devDependencies": {
     "typescript": "^3.8.3",
