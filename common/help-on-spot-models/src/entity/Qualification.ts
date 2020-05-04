@@ -16,6 +16,9 @@ export default class Qualification extends BaseEntity {
     @ManyToMany((type) => User, (user) => user.qualifications)
     users?: User[]
 
+    @Column({nullable: true})
+    category?: string
+
     @ManyToMany((type) => Request, (request) => request.qualifications)
     requests?: Request[]
 }

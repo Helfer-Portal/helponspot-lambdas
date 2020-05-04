@@ -4,7 +4,7 @@
   "description": "Implements DELETE /requests/{requestId} route",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "tsc -b && jest",
     "build": "tsc -b"
   },
   "author": "",
