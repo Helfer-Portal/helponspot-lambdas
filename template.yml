@@ -4,7 +4,8 @@ Description: An AWS Serverless Specification template describing the Help On Spo
 
 Globals:
   Function:
-    Timeout: 5
+    Timeout: 10
+    MemorySize: 128
   Api:
     Cors:
       AllowMethods: "'GET,OPTIONS,POST,PATCH,DELETE'"
@@ -24,14 +25,12 @@ Resources:
   ##    Lambdas    ##
   ###################
   GetQualifications:
-    Type: 'AWS::Serverless::Function'
+    Type: AWS::Serverless::Function
     Properties:
       Handler: dist/lambdas/get-qualifications/src/index.handler
       Runtime: nodejs12.x
       CodeUri: lambdas/get-qualifications
       Description: ''
-      MemorySize: 128
-      Timeout: 10
       Role: >-
         arn:aws:iam::198891906952:role/service-role/HoS_get-qualifications_dev-role-gz7x4ef8
       Events:
@@ -46,3 +45,15 @@ Resources:
           DATABASE_NAME: gis
           DATABASE_PASSWORD: docker
           DATABASE_USERNAME: docker
+  ###################
+  ##    Layers     ##
+  ###################
+  CommonLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: Commons
+      Description: Common code to share with the other lambda functions
+      ContentUri: common/help-on-spot-models
+      CompatibleRuntimes:
+        - nodejs12.x
+      RetentionPolicy: Retain
