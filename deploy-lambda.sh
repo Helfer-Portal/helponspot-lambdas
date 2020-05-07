@@ -35,7 +35,7 @@ do
     npm prune --production
     cd ../../
     echo "build zip package for: ${lambda}"
-    zip -qq -r ${lambda}.zip ./lambdas/${lambda}/dist/** ./lambdas/${lambda}/node_modules/** ./common/help-on-spot-models/dist ./common/help-on-spot-models/node_modules
+    zip -qq -r ${lambda}.zip ./lambdas/${lambda}/dist/** ./lambdas/${lambda}/node_modules/**
 
     # check if lambda function exists
     functionName=HoS_${lambda}_${deploymentStage}
