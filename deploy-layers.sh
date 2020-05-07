@@ -1,8 +1,10 @@
 #!/bin/bash
+
 zipFile="common.zip"
+commonLayerArn="arn:aws:lambda:eu-central-1:198891906952:layer:common"
 modules=(help-on-spot-models)
 
-echo "build modules"
+echo "build layer modules"
 for module in $modules
 do
   cd ./common/$module
@@ -15,18 +17,19 @@ do
   cd ../..
 done
 
-echo "build zip package"
+echo "zip layer package"
 zip -qq -r $zipFile ./nodejs
 
 echo "publish layer"
-aws lambda publish-layer-version \
-          --layer-name "arn:aws:lambda:eu-central-1:198891906952:layer:common" \
+commonLayerArnVersion=$(aws lambda publish-layer-version \
+          --layer-name "$commonLayerArn" \
           --description "models, database connector,..." \
           --compatible-runtimes "nodejs12.x" \
           --zip-file "fileb://$zipFile" \
-          --debug
+          --debug \
+          | egrep -o "$commonLayerArn:\d")
 
 echo "clean up"
 rm -rf $zipFile nodejs
 
-echo "deployment finished"
+echo "published layer: $commonLayerArnVersion"

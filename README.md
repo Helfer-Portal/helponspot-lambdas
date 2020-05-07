@@ -42,17 +42,10 @@ GEOSERVICE_LAMBDA_NAME=
 ## Deploy lambdas to AWS
 * install aws cli
 * setup your AWS credentials wth `aws configure`
-* make sure your lambda uses correct layers version in deploy-lambda.sh script
-  * check available layers versions with ``aws lambda list-layer-versions --layer-name common``
 * run ``./deploy-lambda.sh`` in project root
 * select the lambda you want to deploy or `all` to deploy every lambda
 
-## Deploy lambda layers to AWS
-* install aws cli
-* setup your AWS credentials wth `aws configure`
-* run ``./deploy-layers.sh`` from project root
-
-*Note that, each time you publish layers to aws, a new version is created*
+*By executing ``./deploy-lambda.sh``, layer is also built and deployed. No need to deploy layer seperately.*
 
 ## Steps to create a new lambda function
 * create a new folder in ``/lambdas``, name it according to the served endpoint

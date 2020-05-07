@@ -15,6 +15,9 @@ case "$REPLY" in
 esac
 done
 
+echo "deploy layer"
+source ./deploy-layers.sh
+
 for lambda in "${selectedLambdas[@]}"
 do
     echo Deployoing lambda: "${lambda}"
@@ -35,7 +38,7 @@ do
     echo "update lambdas configuration"
     aws lambda update-function-configuration \
                 --function-name arn:aws:lambda:eu-central-1:198891906952:function:HoS_${lambda}_${deploymentStage} \
-                --layers arn:aws:lambda:eu-central-1:198891906952:layer:common:$currentLayerVersion
+                --layers $commonLayerArnVersion
         
     rm ${lambda}.zip
 done
