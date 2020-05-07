@@ -12,8 +12,8 @@ export function convertEntityToResponseModel(entity: User | Organisation | Reque
             street: entity.address!.street,
             houseNumber: entity.address!.houseNumber,
             location: {
-                latitude: entity.address!.point!.coordinates[0],
-                longitude: entity.address!.point!.coordinates[1]
+                longitude: entity.address!.point!.coordinates[0],
+                latitude: entity.address!.point!.coordinates[1]
             }
         }
     }

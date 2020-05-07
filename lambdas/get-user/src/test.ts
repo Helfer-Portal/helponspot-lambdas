@@ -19,7 +19,6 @@ describe("get qualifications handler", () => {
             street: 'street'
         }
         const address = await connection.getRepository(Address).save(new Address(adata))
-
         const qualifications = await connection.getRepository(Qualification).find()
         const randomEmail = Math.random().toString(36).substring(7) + '@test'
         const user = await userRepo.save(new User(randomEmail, false, qualifications, 'Test', 'User', '', 1))

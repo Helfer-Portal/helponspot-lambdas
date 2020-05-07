@@ -40,13 +40,13 @@ async function createRequest(): Promise<Request> {
     const orgRepo = connection!.getRepository(Organisation)
 
     const randomEmail = Math.random().toString(36).substring(7) + '@test'
-    const user = await userRepo.save(new User(randomEmail, false, [], 'Test', 'User', "", 1))
+    const user = await userRepo.save(new User(randomEmail, false, [], 'Test', 'User', '', 1))
     const addressData: AddressData = { city: 'OrgCity', country: 'c', houseNumber: 'h', postalCode: '1', street: 's' }
     const organisationData: OrganisationData = {
+        name: 'n',
         address: addressData,
         email: '@email',
         logoPath: 'lp',
-        name: 'n',
         responsibles: []
     }
     const organisation = await orgRepo.save(new Organisation(organisationData, [user]))

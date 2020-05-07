@@ -21,7 +21,11 @@ export default class Address extends BaseEntity {
     @Column()
     country?: string
 
-    @Column('geometry', {
+    /**
+     * Important: the first ([0]) element of the coordinates array represents the longitude value,
+     * the second ([1]) element represents the latitude value
+     */
+    @Column('geography', {
         nullable: true
     })
     point?: {
@@ -37,6 +41,12 @@ export default class Address extends BaseEntity {
             this.postalCode = addressData.postalCode
             this.city = addressData.city
             this.country = addressData.country
+            this.point = addressData.coordinates
+                ? {
+                      type: 'point',
+                      coordinates: addressData.coordinates
+                  }
+                : undefined
         }
     }
 }

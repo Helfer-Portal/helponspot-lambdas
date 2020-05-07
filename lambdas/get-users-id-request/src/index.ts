@@ -6,15 +6,15 @@ import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-
 export interface LambdaInputEvent {
     pathParameters: {
         userId: string
-        radius?: string
         requestType?: string
         location?: { lat: number; long: number }
     }
+    queryStringParameters?: {
+        radius?: number
+    }
 }
 
-/* TODO: this should probably be done as part of the DB query. But since this will change anyway once we change to
- * actual locations I guess it is good enough atm.
- */
+// TODO: this should probably be done as part of the DB query.
 function matchesUserQualifications(request: Request, userQualifications: Qualification[] | undefined): boolean {
     if (!request.qualifications || request.qualifications.length === 0) {
         return true
@@ -27,6 +27,7 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
     const db = new Database()
     const connection = await db.getConnection()
     const userId = event.pathParameters.userId
+    const radius = event.queryStringParameters && event.queryStringParameters.radius
 
     try {
         console.log(`Trying to find suitable Requests for user ${userId}`)
@@ -38,26 +39,45 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
             return lambdaResponse(400, 'Given User does not exist')
         }
 
+        const searchRadius = radius || user.travellingDistance
+        if (!searchRadius) {
+            return lambdaResponse(400, 'No search-radius provided and user has no travelling distance set!')
+        }
+
         const userQualifications: Qualification[] = user.qualifications!
         const requestedCity = user.address!.city
 
         const requestRepository = connection.getRepository(Request)
-        const locationMatchedRequests = await requestRepository
-            .createQueryBuilder('request')
-            .leftJoinAndSelect('request.address', 'address')
-            .leftJoinAndSelect('request.qualifications', 'qualifications')
-            .where('address.city = :city', { city: requestedCity })
-            .getMany()
-        console.log('Found ' + locationMatchedRequests.length + ' location matches')
 
-        const qualificationMatchedRequests = locationMatchedRequests.filter((request) =>
+        /**
+         * raw query:
+         SELECT *
+         FROM request AS req
+         INNER JOIN address AS add ON add.id = req."addressId"
+         WHERE ST_Distance_Sphere(add.point, ST_MakePoint(52.5243741,13.4057372)) <= 1800;
+         */
+        const geoMatchedRequests = await requestRepository
+            .createQueryBuilder('request')
+            .innerJoinAndSelect('request.address', 'address')
+            .innerJoinAndSelect('request.qualifications', 'qualifications')
+            .where('ST_Distance(address.point, ST_SetSRID(ST_MakePoint(:userLng,:userLat),4326)) <= :userTravellingDistance', {
+                userLng: user.address!.point!.coordinates[0],
+                userLat: user.address!.point!.coordinates[1],
+                userTravellingDistance: searchRadius
+            })
+            .getMany()
+
+        console.log('Found ' + geoMatchedRequests.length + ' geo location matches')
+
+        if (!geoMatchedRequests) {
+            return lambdaResponse(404, 'No Requests match the given query')
+        }
+
+        const qualificationMatchedRequests = geoMatchedRequests.filter((request) =>
             matchesUserQualifications(request, userQualifications)
         )
         console.log('Found ' + qualificationMatchedRequests.length + ' location+qualification matches')
 
-        if (!locationMatchedRequests) {
-            return lambdaResponse(404, 'No Requests match the given query')
-        }
         return lambdaResponse(200, qualificationMatchedRequests)
     } catch (e) {
         console.log(`Error during lambda execution: ${e}`)
