@@ -1,6 +1,6 @@
-import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
-import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
-import RequestResponse from '../../../common/help-on-spot-models/dist/entity/RequestResponse'
+import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
+import RequestResponse from '/opt/nodejs/common/help-on-spot-models/dist/entity/RequestResponse'
 
 export interface LambdaInputEvent {
     body: string

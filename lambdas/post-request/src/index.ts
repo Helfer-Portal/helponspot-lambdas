@@ -1,14 +1,14 @@
-import { getPointFromGeoservice } from '../../../common/help-on-spot-models/dist/utils/getGeolocation'
+import { getPointFromGeoservice } from '/opt/nodejs/common/help-on-spot-models/dist/utils/getGeolocation'
 
 require('dotenv').config()
 
-import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
-import { RequestData } from '../../../common/help-on-spot-models/dist/models/RestModels'
-import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
-import { Connection, In, Qualification } from '../../../common/help-on-spot-models/dist/index'
-import Organisation from '../../../common/help-on-spot-models/dist/entity/Organisation'
-import Request from '../../../common/help-on-spot-models/dist/entity/Request'
-import { convertEntityToResponseModel } from '../../../common/help-on-spot-models/dist/models/ApiResponseModels'
+import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
+import { RequestData } from '/opt/nodejs/common/help-on-spot-models/dist/models/RestModels'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
+import { Connection, In, Qualification } from '/opt/nodejs/common/help-on-spot-models/dist/index'
+import Organisation from '/opt/nodejs/common/help-on-spot-models/dist/entity/Organisation'
+import Request from '/opt/nodejs/common/help-on-spot-models/dist/entity/Request'
+import { convertEntityToResponseModel } from '/opt/nodejs/common/help-on-spot-models/dist/models/ApiResponseModels'
 
 export interface LambdaInputEvent {
     body: string

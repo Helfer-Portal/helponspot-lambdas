@@ -1,6 +1,7 @@
-import { Connection, User } from '../../../common/help-on-spot-models/dist'
-import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
-import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
+require('dotenv').config()
+import { Connection, User } from '/opt/nodejs/common/help-on-spot-models/dist'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
+import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
 
 export interface LambdaInputEvent {
     pathParameters: any

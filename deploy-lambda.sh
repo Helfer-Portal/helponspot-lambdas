@@ -22,6 +22,9 @@ case "$REPLY" in
 esac
 done
 
+echo "deploy layer"
+source ./deploy-layers.sh
+
 for lambda in "${selectedLambdas[@]}"
 do
     # build zip package
@@ -32,7 +35,7 @@ do
     npm prune --production
     cd ../../
     echo "build zip package for: ${lambda}"
-    zip -qq -r ${lambda}.zip ./lambdas/${lambda}/dist/** ./lambdas/${lambda}/node_modules/** ./common/help-on-spot-models/dist ./common/help-on-spot-models/node_modules
+    zip -qq -r ${lambda}.zip ./lambdas/${lambda}/dist/** ./lambdas/${lambda}/node_modules/**
 
     # check if lambda function exists
     functionName=HoS_${lambda}_${deploymentStage}
@@ -56,8 +59,13 @@ do
         echo "Updating existing lambda function ${functionName}"
         aws lambda update-function-code --function-name arn:aws:lambda:eu-central-1:198891906952:function:${functionName} --zip-file fileb://${lambda}.zip
     fi
+
+    echo "update lambda with newly published layer"
+    aws lambda update-function-configuration \
+              --function-name arn:aws:lambda:eu-central-1:198891906952:function:${functionName} \
+              --layers $commonLayerArnVersion
+
     rm ${lambda}.zip
 done
 echo "Finished deployment"
-
 

@@ -1,7 +1,7 @@
-import { Qualification, User } from '../../../common/help-on-spot-models/dist'
-import Request from '../../../common/help-on-spot-models/dist/entity/Request'
-import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
-import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
+import { Qualification, User } from '/opt/nodejs/common/help-on-spot-models/dist'
+import Request from '/opt/nodejs/common/help-on-spot-models/dist/entity/Request'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
+import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
 
 export interface LambdaInputEvent {
     pathParameters: {

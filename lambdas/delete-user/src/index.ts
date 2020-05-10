@@ -1,8 +1,8 @@
-import User from '../../../common/help-on-spot-models/dist/entity/User'
-import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
-import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
-import RequestResponse from '../../../common/help-on-spot-models/dist/entity/RequestResponse'
-import { Connection } from '../../../common/help-on-spot-models/dist'
+import User from '/opt/nodejs/common/help-on-spot-models/dist/entity/User'
+import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
+import RequestResponse from '/opt/nodejs/common/help-on-spot-models/dist/entity/RequestResponse'
+import { Connection } from '/opt/nodejs/common/help-on-spot-models/dist'
 
 export interface LambdaInputEvent {
     pathParameters: { userId: string }

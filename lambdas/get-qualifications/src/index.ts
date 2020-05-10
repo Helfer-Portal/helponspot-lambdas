@@ -1,7 +1,7 @@
 require('dotenv').config()
-import { Qualification } from '../../../common/help-on-spot-models/dist'
-import { Database } from '../../../common/help-on-spot-models/dist/utils/Database'
-import { LambdaResponse, lambdaResponse } from '../../../common/help-on-spot-models/dist/utils/lambdaResponse'
+import { Qualification } from '/opt/nodejs/common/help-on-spot-models/dist'
+import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
+import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
 
 export const handler = async (): Promise<LambdaResponse> => {
     const db = new Database()

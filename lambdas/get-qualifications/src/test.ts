@@ -1,9 +1,8 @@
 import { handler } from './index'
-;(async function () {
-    const requestObject = {}
 
-    // fill in a qualification
-    const result = await handler()
-
-    console.log(JSON.stringify(result))
-})()
+describe("get qualifications handler", () => {
+    it("should return status 200", async () => {
+        const result = await handler()
+        expect(result.statusCode).toEqual(200)
+    })
+})

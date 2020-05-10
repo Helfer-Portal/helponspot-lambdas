@@ -43,14 +43,16 @@ GEOSERVICE_LAMBDA_NAME=
 * install aws cli
 * setup your AWS credentials wth `aws configure`
 * create a file named `.lambda-envs.tx` in project root. Places envs needed for lambdas there (comma separated i.e VAR1=value,VAR2=value2,...)  
-* run ``./deploy.sh`` in project root
+* run ``./deploy-lambda.sh`` in project root
 * select the stage you want to deploy to (dev,prod, etc) If you want to add a new stage you also need to create it in API gateway + the needed stage variables
 * select the lambda you want to deploy or `all` to deploy every lambda
 
+*Note that the deployment of common layer is included inside ``deploy-lambda.sh``, so no need to execute ``deploy-layers.sh`` seperately*
+
 ## Steps to create a new lambda function
 * create a new folder in ``/lambdas``, name it according to the served endpoint
-* setup a typescript project, make sure the tsconfig has a reference to the commons project you want to include
-* add folder name to `deploy.sh` script's lambda array (Line 5)
+* setup a typescript project, make sure the tsconfig and jest-config have a reference to the commons project you want to include
+* add folder name to `deploy-lambda.sh` script's lambda array (Line 5)
 
 * point API gateway's endpoint 'Integration Request' to new lambda (make sure to use stage variable in lambda name so that different stages can point to different lambdas)
 * assign correct input/output models or create them if they don't exist yet
