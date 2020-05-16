@@ -26,7 +26,6 @@ commonLayerArnVersion=$(aws lambda publish-layer-version \
           --description "models, database connector,..." \
           --compatible-runtimes "nodejs12.x" \
           --zip-file "fileb://$zipFile" \
-          --debug \
           | egrep -o "$commonLayerArn:\d")
 
 echo "clean up"
