@@ -6,3 +6,4 @@ node_modules
 /common/help-on-spot-models/tsconfig.tsbuildinfo
 .DS_Store
 .lambda-envs.txt
+/.lambda-envs-prod.txt

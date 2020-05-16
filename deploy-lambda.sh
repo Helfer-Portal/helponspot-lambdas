@@ -39,17 +39,18 @@ do
 
     # check if lambda function exists
     functionName=HoS_${lambda}_${deploymentStage}
+    echo "Full functin name ${functionName}"
     set +e
     lambdaFunctionExists=`aws lambda list-functions | grep ${functionName}`
     set -e
-    if [[ -z "$lambdaFunctionExists" ]]
+    if [[ -z ${lambdaFunctionExists} ]]
     then
         echo "Creating new lambda function ${functionName}"
         handler="lambdas/${lambda}/dist/index.handler"
         role="arn:aws:iam::198891906952:role/HoS-lambda-role"
         # not really important just needs to be unique
         statementId="${lambda}-cad7-4775-bf56-36baa21030a7"
-        envs=`cat ./.lambda-envs.txt`
+        envs=`cat ./.lambda-envs-${deploymentStage}.txt`
 
         aws lambda create-function --function-name ${functionName} --runtime nodejs12.x --role ${role} --handler ${handler} --zip-file fileb://${lambda}.zip --environment "Variables={${envs}}"
         # add trigger that allows api gateway to call the lambda
@@ -63,7 +64,7 @@ do
     echo "update lambda with newly published layer"
     aws lambda update-function-configuration \
               --function-name arn:aws:lambda:eu-central-1:198891906952:function:${functionName} \
-              --layers $commonLayerArnVersion
+              --layers ${commonLayerArnVersion}
 
     rm ${lambda}.zip
 done
