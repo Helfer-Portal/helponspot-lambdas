@@ -42,7 +42,7 @@ GEOSERVICE_LAMBDA_NAME=
 ## Deploy lambdas to AWS
 * install aws cli
 * setup your AWS credentials wth `aws configure`
-* create a file named `.lambda-envs.tx` in project root. Places envs needed for lambdas there (comma separated i.e VAR1=value,VAR2=value2,...)  
+* create a files named `.lambda-envs-dev.txt` and `.lambda-envs-prod.txt` in project root. Places envs needed for lambdas there (comma separated i.e VAR1=value,VAR2=value2,...)  
 * run ``./deploy-lambda.sh`` in project root
 * select the stage you want to deploy to (dev,prod, etc) If you want to add a new stage you also need to create it in API gateway + the needed stage variables
 * select the lambda you want to deploy or `all` to deploy every lambda
