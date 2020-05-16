@@ -39,7 +39,7 @@ do
 
     # check if lambda function exists
     functionName=HoS_${lambda}_${deploymentStage}
-    echo "Full functin name ${functionName}"
+    echo "Full function name ${functionName}"
     set +e
     lambdaFunctionExists=`aws lambda list-functions | grep ${functionName}`
     set -e
