@@ -1,11 +1,10 @@
-require('dotenv').config()
-
-import { convertEntityToResponseModel } from '/opt/nodejs/common/help-on-spot-models/dist/models/ApiResponseModels'
-import { getPointFromGeoservice } from '/opt/nodejs/common/help-on-spot-models/dist/utils/getGeolocation'
-import { UserData } from '/opt/nodejs/common/help-on-spot-models/src/models/RestModels'
-import { LambdaResponse, lambdaResponse } from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
-import { Address, Connection, Qualification, User, In } from '/opt/nodejs/common/help-on-spot-models/dist'
-import { Database } from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
+import {PatchError} from "./PatchError";
+import {convertEntityToResponseModel} from '/opt/nodejs/common/help-on-spot-models/dist/models/ApiResponseModels'
+import {getPointFromGeoservice} from '/opt/nodejs/common/help-on-spot-models/dist/utils/getGeolocation'
+import {UserData} from '/opt/nodejs/common/help-on-spot-models/src/models/RestModels'
+import {LambdaResponse, lambdaResponse} from '/opt/nodejs/common/help-on-spot-models/dist/utils/lambdaResponse'
+import {Address, Connection, Qualification, User, In} from '/opt/nodejs/common/help-on-spot-models/dist'
+import {Database} from '/opt/nodejs/common/help-on-spot-models/dist/utils/Database'
 
 export interface LambdaInputEvent {
     pathParameters: any
@@ -13,61 +12,75 @@ export interface LambdaInputEvent {
 }
 
 export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> => {
-    const userId = event.pathParameters.userId
     const db = new Database()
     const connection = await db.getConnection()
-
     if (!connection) {
         return lambdaResponse(500, 'No Database connection')
     }
 
-    const userRepository = connection.getRepository(User)
-    let user: User | undefined
     try {
-        user = await userRepository.findOne({ where: { id: userId }, relations: ['address', 'qualifications'] })
+        const userId = event.pathParameters.userId
+
+        const userRepository = connection.getRepository(User)
+        let user: User | undefined
+        user = await userRepository.findOne({where: {id: userId}, relations: ['address', 'qualifications']})
         if (!user) {
-            await db.disconnect(connection)
-            return lambdaResponse(404, 'User not found!')
+            throw new PatchError(404, 'User not found!')
         }
-    } catch (e) {
+
+        const userPatchData: UserData = JSON.parse(event.body)
+        if (userPatchData.email && user.email !== userPatchData.email) {
+            throw new PatchError(500, 'Change of e-mail is currently not supported')
+        }
+        await patchQualifications(userPatchData, user, connection)
+        patchPrimitveValues(userPatchData, user);
+        await patchAddress(userPatchData, user, connection)
+
+        const savedUser: User = await userRepository.save(user)
+        return lambdaResponse(200, JSON.stringify(convertEntityToResponseModel(savedUser)))
+    } catch (error) {
+        console.log(`Error during lambda execution: ${JSON.stringify(error)}`)
+        if (error instanceof PatchError) {
+            return lambdaResponse(error.statusCode, error.message)
+        } else {
+            return lambdaResponse(500, `Unexpected error: '${JSON.stringify(error)}'`)
+        }
+    } finally {
         await db.disconnect(connection)
-        return lambdaResponse(500, JSON.stringify(e))
     }
+}
 
-    const userPatchData: UserData = JSON.parse(event.body)
 
+async function findQualifications(qualifications: string[], connection: Connection): Promise<Qualification[]> {
+    const qualificationRepository = connection.getRepository(Qualification)
+    return qualificationRepository.find({
+        key: In(qualifications)
+    })
+}
+
+async function findAddress(addressId: string, connection: Connection): Promise<Address | undefined> {
+    const addressRepository = connection.getRepository(Address)
+    return addressRepository.findOne({where: {id: addressId}})
+}
+
+async function patchQualifications(userPatchData: UserData, user: User, connection: Connection): Promise<void> {
     if (userPatchData.qualifications && userPatchData.qualifications.length > 0) {
         const qualifications = await findQualifications(userPatchData.qualifications, connection)
         if (qualifications.length !== userPatchData.qualifications.length) {
-            await db.disconnect(connection)
-            return lambdaResponse(400, 'Some qualifications are not valid!')
+            throw new PatchError(400, 'Some qualifications are not valid!')
         }
         user.qualifications = qualifications
     }
+}
 
-    user.firstName = userPatchData.firstName
-    user.lastName = userPatchData.lastName
-    user.email = userPatchData.email
-
-    if (userPatchData.travellingDistance) {
-        user.travellingDistance = userPatchData.travellingDistance
-    }
-
-    if (userPatchData.isGPSLocationAllowed !== undefined) {
-        user.isGPSLocationAllowed = userPatchData.isGPSLocationAllowed
-    }
-    if (userPatchData.avatar) {
-        user.avatar = userPatchData.avatar
-    }
-
+async function patchAddress(userPatchData: UserData, user: User, connection: Connection) {
     if (userPatchData.address) {
         let coordinates
         try {
             coordinates = await getPointFromGeoservice(userPatchData.address)
         } catch (e) {
             console.log(`Error during lambda execution: ${e.message}`)
-            await db.disconnect(connection)
-            return lambdaResponse(400, { message: e.message })
+            throw new PatchError(500, e.message)
         }
         if (user.address && user.address.id) {
             const oldAddress = await findAddress(user.address.id, connection)
@@ -85,26 +98,23 @@ export const handler = async (event: LambdaInputEvent): Promise<LambdaResponse> 
             coordinates
         }
     }
+}
 
-    try {
-        const savedUser: User = await userRepository.save(user)
-        return lambdaResponse(200, JSON.stringify(convertEntityToResponseModel(savedUser)))
-    } catch (e) {
-        console.log(`Error during lambda execution: ${JSON.stringify(e)}`)
-        return lambdaResponse(500, JSON.stringify(e))
-    } finally {
-        await db.disconnect(connection)
+function patchPrimitveValues(userPatchData: UserData, user: User) {
+    if (userPatchData.firstName) {
+        user.firstName = userPatchData.firstName
     }
-}
+    if (userPatchData.lastName) {
+        user.lastName = userPatchData.lastName
+    }
 
-async function findQualifications(qualifications: string[], connection: Connection): Promise<Qualification[]> {
-    const qualificationRepository = connection.getRepository(Qualification)
-    return qualificationRepository.find({
-        key: In(qualifications)
-    })
-}
-
-async function findAddress(addressId: string, connection: Connection): Promise<Address | undefined> {
-    const addressRepository = connection.getRepository(Address)
-    return addressRepository.findOne({ where: { id: addressId } })
+    if (userPatchData.travellingDistance) {
+        user.travellingDistance = userPatchData.travellingDistance
+    }
+    if (userPatchData.isGPSLocationAllowed !== undefined) {
+        user.isGPSLocationAllowed = userPatchData.isGPSLocationAllowed
+    }
+    if (userPatchData.avatar) {
+        user.avatar = userPatchData.avatar
+    }
 }
