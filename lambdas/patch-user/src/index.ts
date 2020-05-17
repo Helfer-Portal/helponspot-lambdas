@@ -74,14 +74,21 @@ async function patchQualifications(userPatchData: UserData, user: User, connecti
 }
 
 async function patchAddress(userPatchData: UserData, user: User, connection: Connection) {
+
     if (userPatchData.address) {
         let coordinates
         try {
-            coordinates = await getPointFromGeoservice(userPatchData.address)
+            if (userPatchData.address.coordinates) {
+                coordinates = userPatchData.address.coordinates
+            } else {
+                coordinates = await getPointFromGeoservice(userPatchData.address)
+            }
         } catch (e) {
             console.log(`Error during lambda execution: ${e.message}`)
             throw new PatchError(500, e.message)
         }
+
+
         if (user.address && user.address.id) {
             const oldAddress = await findAddress(user.address.id, connection)
             oldAddress!.city = userPatchData.address.city

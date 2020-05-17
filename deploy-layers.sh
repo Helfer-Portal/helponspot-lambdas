@@ -34,3 +34,4 @@ echo "clean up"
 rm -rf $zipFile nodejs
 
 echo "published layer: $commonLayerArnVersion"
+npm i
