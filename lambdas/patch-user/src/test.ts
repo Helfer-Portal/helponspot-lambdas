@@ -34,26 +34,46 @@ describe('patch user handler',  () => {
 
     })
 
-    // it('Change address', async () => {
-    //     const user = await setup()
-    //     const patchUser = {
-    //         address: {
-    //             houseNumber: '1',
-    //             city: 'München',
-    //             street: 'Heinrich-Lübke-Straße',
-    //             postalCode: '81737',
-    //             country: 'Deutschland'
-    //         }
-    //     }
-    //     const requestObject: LambdaInputEvent = {
-    //         body: JSON.stringify(patchUser),
-    //         pathParameters: {
-    //             userId: user.id
-    //         }
-    //     }
-    //     const result = await handler(requestObject)
-    //     expect(result.statusCode).toEqual(200)
-    //     expect(result.body).toContain('Heinrich-Lübke-Straße')
-    //
-    // })
+    it('Change address', async () => {
+        const user = await setup()
+        const patchUser = {
+            address: {
+                houseNumber: '1',
+                city: 'München',
+                street: 'Heinrich-Lübke-Straße',
+                postalCode: '81737',
+                country: 'Deutschland'
+            }
+        }
+        const requestObject: LambdaInputEvent = {
+            body: JSON.stringify(patchUser),
+            pathParameters: {
+                userId: user.id
+            }
+        }
+        const result = await handler(requestObject)
+        expect(result.statusCode).toEqual(200)
+        expect(result.body).toContain('Heinrich-Lübke-Straße')
+
+    })
+
+    it('Change location', async () => {
+        const user = await setup()
+        const patchUser = {
+            address: {
+                   coordinates: [11.123 , 12.345]
+            }
+        }
+        const requestObject: LambdaInputEvent = {
+            body: JSON.stringify(patchUser),
+            pathParameters: {
+                userId: user.id
+            }
+        }
+        const result = await handler(requestObject)
+        expect(result.statusCode).toEqual(200)
+        expect(result.body).toContain('11.123')
+        expect(result.body).toContain('12.345')
+
+    })
 })

@@ -6,19 +6,19 @@ export default class Address extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id?: string
 
-    @Column()
+    @Column({nullable: true})
     street?: string
 
-    @Column()
+    @Column({nullable: true})
     houseNumber?: string
 
-    @Column()
+    @Column({nullable: true})
     postalCode?: string
 
-    @Column()
+    @Column({nullable: true})
     city?: string
 
-    @Column()
+    @Column({nullable: true})
     country?: string
 
     /**
