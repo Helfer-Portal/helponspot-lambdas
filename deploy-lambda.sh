@@ -11,7 +11,7 @@ esac
 done
 
 
-availableLambdas=(delete-organisation delete-user delete-request get-organisation-requests get-organisations get-qualifications get-request-id get-user get-users-id-request get-volunteers patch-user post-organisation post-request post-user put-volunteer)
+availableLambdas=(delete-organisation delete-user delete-request get-organisation-requests get-organisations get-qualifications get-request-id get-user get-users get-users-id-request get-volunteers patch-user post-organisation post-request post-user put-volunteer)
 selectedLambdas=()
 PS3="Which Lambda do you want to deploy? ('all' is an option)"
 select answer in "${availableLambdas[@]}"

@@ -7,3 +7,4 @@ node_modules
 .DS_Store
 .lambda-envs.txt
 /.lambda-envs-prod.txt
+/.lambda-envs-dev.txt
