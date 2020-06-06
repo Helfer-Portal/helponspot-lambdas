@@ -4,15 +4,14 @@
   "description": "Implements GET /users/{userId}/requests route",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "tsc -b && jest",
     "build": "tsc -b"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "dotenv": "^8.2.0",
-    "typescript": "^3.8.3"
-  },
+  "dependencies": {},
+  "dotenv": "^8.2.0",
+  "typescript": "^3.8.3",
   "devDependencies": {
     "@types/node": "^13.11.0",
     "@types/dotenv": "^8.2.0",
