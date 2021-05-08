@@ -14,7 +14,7 @@
     "aws-sdk": "^2.659.0",
     "pg": "^8.0.2",
     "tsconfig-paths": "^3.9.0",
-    "typeorm": "^0.2.24"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "typescript": "^3.8.3",
